@@ -196,6 +196,7 @@ ApplicationWindow {
                     icon.name: "play"
                     icon.width: 32
                     icon.height: 32
+                    onClicked: icon.name == "play" ? icon.name = "pause" : icon.name = "play"
                 }
                 RoundButton {
                     icon.name: "next"
