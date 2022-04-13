@@ -1,20 +1,42 @@
 <RCC>
-    <qresource prefix="/">
-        <<file>mediaplayer/icons/bluetooth.png</file>
-        <file>mediaplayer/icons/cart.png</file>
-        <file>mediaplayer/icons/cloud.png</file>
-        <file>mediaplayer/icons/filter.png</file>
-        <file>mediaplayer/icons/folder.png</file>
-        <file>mediaplayer/icons/message.png</file>
-        <file>mediaplayer/icons/music.png</file>
-        <file>mediaplayer/icons/next.png</file>
-        <file>mediaplayer/icons/pause.png</file>
-        <file>mediaplayer/icons/power.png</file>
-        <file>mediaplayer/icons/previous.png</file>
-        <file>mediaplayer/icons/repeat.png</file>
-        <file>mediaplayer/icons/save.png</file>
-        <file>mediaplayer/icons/settings.png</file>
-        <file>mediaplayer/icons/shuffle.png</file>
-        <file>mediaplayer/icons/stop.png</file>
+    <qresource prefix="/icons">
+        <file>mediaplayer/index.theme</file>
+        <file>mediaplayer/32x32/bluetooth.png</file>
+        <file>mediaplayer/32x32/cart.png</file>
+        <file>mediaplayer/32x32/cloud.png</file>
+        <file>mediaplayer/32x32/filter.png</file>
+        <file>mediaplayer/32x32/folder.png</file>
+        <file>mediaplayer/32x32/message.png</file>
+        <file>mediaplayer/32x32/music.png</file>
+        <file>mediaplayer/32x32/next.png</file>
+        <file>mediaplayer/32x32/pause.png</file>
+        <file>mediaplayer/32x32/power.png</file>
+        <file>mediaplayer/32x32/previous.png</file>
+        <file>mediaplayer/32x32/repeat.png</file>
+        <file>mediaplayer/32x32/save.png</file>
+        <file>mediaplayer/32x32/settings.png</file>
+        <file>mediaplayer/32x32/shuffle.png</file>
+        <file>mediaplayer/32x32/stop.png</file>
+        <file>mediaplayer/32x32@2/bluetooth.png</file>
+        <file>mediaplayer/32x32@2/cart.png</file>
+        <file>mediaplayer/32x32@2/cloud.png</file>
+        <file>mediaplayer/32x32@2/filter.png</file>
+        <file>mediaplayer/32x32@2/folder.png</file>
+        <file>mediaplayer/32x32@2/grid.png</file>
+        <file>mediaplayer/32x32@2/message.png</file>
+        <file>mediaplayer/32x32@2/music.png</file>
+        <file>mediaplayer/32x32@2/next.png</file>
+        <file>mediaplayer/32x32@2/pause.png</file>
+        <file>mediaplayer/32x32@2/power.png</file>
+        <file>mediaplayer/32x32@2/previous.png</file>
+        <file>mediaplayer/32x32@2/repeat.png</file>
+        <file>mediaplayer/32x32@2/save.png</file>
+        <file>mediaplayer/32x32@2/settings.png</file>
+        <file>mediaplayer/32x32@2/shuffle.png</file>
+        <file>mediaplayer/32x32@2/stop.png</file>
+        <file>mediaplayer/32x32/favorite.png</file>
+        <file>mediaplayer/32x32@2/favorite.png</file>
+        <file>mediaplayer/32x32/play.png</file>
+        <file>mediaplayer/32x32@2/play.png</file>
     </qresource>
 </RCC>
