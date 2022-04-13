@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <<file>mediaplayer/icons/bluetooth.png</file>
+        <file>mediaplayer/icons/cart.png</file>
+        <file>mediaplayer/icons/cloud.png</file>
+        <file>mediaplayer/icons/filter.png</file>
+        <file>mediaplayer/icons/folder.png</file>
+        <file>mediaplayer/icons/message.png</file>
+        <file>mediaplayer/icons/music.png</file>
+        <file>mediaplayer/icons/next.png</file>
+        <file>mediaplayer/icons/pause.png</file>
+        <file>mediaplayer/icons/power.png</file>
+        <file>mediaplayer/icons/previous.png</file>
+        <file>mediaplayer/icons/repeat.png</file>
+        <file>mediaplayer/icons/save.png</file>
+        <file>mediaplayer/icons/settings.png</file>
+        <file>mediaplayer/icons/shuffle.png</file>
+        <file>mediaplayer/icons/stop.png</file>
+    </qresource>
+</RCC>
