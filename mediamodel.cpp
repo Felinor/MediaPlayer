@@ -10,12 +10,12 @@
 
 MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
 {
-    m_data.append("Demon Hunter Collapsing");
-    m_data.append("P.O.D. Boom");
-    m_data.append("Green Day Holidays");
-    m_data.append("Jeremy Soul Dragonborne");
-    m_data.append("Jeremy Soul Awake");
-    m_data.append("Demon Hunter Death Flowers");        
+//    m_data.append("Demon Hunter Collapsing");
+//    m_data.append("P.O.D. Boom");
+//    m_data.append("Green Day Holidays");
+//    m_data.append("Jeremy Soul Dragonborne");
+//    m_data.append("Jeremy Soul Awake");
+//    m_data.append("Demon Hunter Death Flowers");
 }
 
 int MediaModel::rowCount(const QModelIndex &parent) const
@@ -63,24 +63,18 @@ void MediaModel::add()
     emit dataChanged(index, index);
 }
 
-void MediaModel::start()
+void MediaModel::play()
 {        
-//    QString path = QDir::homePath() + "/Музыка";
-//    QDir const source(path);
-//    QStringList files = source.entryList(QStringList() << "*.mp3", QDir::Files);
-
-//    foreach (QString filename, files) {
-//        m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile("/home/felinor/Музыка/"+filename)));
-//        qDebug() << filename;
-//    }
-
-    m_playlist->setCurrentIndex(1);
-
     m_player->setPlaylist(m_playlist);
+    m_playlist->setCurrentIndex(1);
     m_playlist->setPlaybackMode(QMediaPlaylist::Loop);
     m_player->play();
+    //    qDebug() << m_player->metaData(QMediaMetaData::Author) << "<==========";
+}
 
-    //    qDebug() << player->metaData(QMediaMetaData::Author) << "<==========";
+void MediaModel::stop()
+{
+    m_player->stop();
 }
 
 void MediaModel::createPlaylist(QVariant playlist)
@@ -91,6 +85,6 @@ void MediaModel::createPlaylist(QVariant playlist)
         QString awesomePath = filename.toString().remove(0, 7);
         m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile(awesomePath)));
     }
-    start();
+    play();
 }
 

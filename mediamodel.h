@@ -25,7 +25,8 @@ public:
     virtual QHash<int, QByteArray> roleNames() const;
 
     Q_INVOKABLE void add();
-    Q_INVOKABLE void start();
+    Q_INVOKABLE void play();
+    Q_INVOKABLE void stop();
     Q_INVOKABLE void createPlaylist(QVariant playlist);
 
 private:

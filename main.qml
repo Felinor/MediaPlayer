@@ -198,7 +198,12 @@ ApplicationWindow {
                     icon.name: "play"
                     icon.width: 32
                     icon.height: 32
-                    onClicked: icon.name == "play" ? icon.name = "pause" : icon.name = "play"
+                    onClicked: {
+                        icon.name == "play" ? icon.name = "pause" : icon.name = "play"
+                        if (icon.name == "play")
+                            dataModel.play()
+                        else dataModel.stop()
+                    }
                 }
                 RoundButton {
                     icon.name: "next"
@@ -221,7 +226,6 @@ ApplicationWindow {
                     icon.height: 32
                     onClicked: {
                         fileDialog.open()
-//                        dataModel.start()
                     }
                 }
             }
@@ -233,7 +237,7 @@ ApplicationWindow {
             nameFilters: [ "*.mp3", "*.mp4" ]
             selectMultiple: true
             onSelectionAccepted: {
-                console.log(fileUrls)
+//                console.log(fileUrls)
 //                console.log(fileUrl)
                 dataModel.createPlaylist(fileUrls)
             }
