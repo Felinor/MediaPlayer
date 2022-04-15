@@ -38,5 +38,6 @@
         <file>mediaplayer/32x32@2/favorite.png</file>
         <file>mediaplayer/32x32/play.png</file>
         <file>mediaplayer/32x32@2/play.png</file>
+        <file>mediaplayer/32x32/add.png</file>
     </qresource>
 </RCC>

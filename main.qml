@@ -3,6 +3,7 @@ import QtQuick.Window 2.15
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Dialogs 1.3
 import MediaModel 1.0
 
 ApplicationWindow {
@@ -186,6 +187,7 @@ ApplicationWindow {
                     icon.name: "stop"
                     icon.width: 32
                     icon.height: 32
+//                    onClicked:
                 }
                 RoundButton {
                     icon.name: "previous"
@@ -213,9 +215,29 @@ ApplicationWindow {
                     icon.width: 32
                     icon.height: 32
                 }
+                RoundButton {
+                    icon.name: "add"
+                    icon.width: 32
+                    icon.height: 32
+                    onClicked: {
+                        fileDialog.open()
+//                        dataModel.start()
+                    }
+                }
             }
         }
 
+        FileDialog {
+            id: fileDialog
+            folder: shortcuts.music
+            nameFilters: [ "*.mp3", "*.mp4" ]
+            selectMultiple: true
+            onSelectionAccepted: {
+                console.log(fileUrls)
+//                console.log(fileUrl)
+                dataModel.createPlaylist(fileUrls)
+            }
+        }
 
 //    PathView {
 //        id: view

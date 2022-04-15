@@ -12,11 +12,14 @@ int main(int argc, char *argv[])
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
-    QGuiApplication app(argc, argv);
     QGuiApplication::setApplicationName("Media Player");
+    QGuiApplication::setApplicationVersion("1.0");
     QGuiApplication::setOrganizationName("");
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QGuiApplication::setOrganizationDomain("");
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
+    QGuiApplication app(argc, argv);
 
     qmlRegisterType<MediaModel>("MediaModel", 1, 0, "MediaModel");
 
