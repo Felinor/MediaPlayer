@@ -65,14 +65,14 @@ void MediaModel::add()
 
 void MediaModel::start()
 {        
-    QString path = QDir::homePath() + "/Музыка";
-    QDir const source(path);
-    QStringList files = source.entryList(QStringList() << "*.mp3", QDir::Files);
+//    QString path = QDir::homePath() + "/Музыка";
+//    QDir const source(path);
+//    QStringList files = source.entryList(QStringList() << "*.mp3", QDir::Files);
 
-    foreach (QString filename, files) {
-        m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile("/home/felinor/Музыка/"+filename)));
-        qDebug() << filename;
-    }
+//    foreach (QString filename, files) {
+//        m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile("/home/felinor/Музыка/"+filename)));
+//        qDebug() << filename;
+//    }
 
     m_playlist->setCurrentIndex(1);
 
@@ -85,10 +85,11 @@ void MediaModel::start()
 
 void MediaModel::createPlaylist(QVariant playlist)
 {
-    foreach (QString filename, playlist.toStringList()) {
-        QString awesomePath = filename.remove(0, 7);
+    QList<QUrl> list = qvariant_cast<QList<QUrl>>(playlist);
+
+    foreach (QUrl filename, list) {
+        QString awesomePath = filename.toString().remove(0, 7);
         m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile(awesomePath)));
-        qDebug() << filename;
     }
     start();
 }
