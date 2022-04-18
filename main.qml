@@ -80,7 +80,10 @@ ApplicationWindow {
                          }
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: songNameLabel.text = model.text
+                            onClicked: {
+                                songNameLabel.text = model.text
+                                dataModel.play()
+                            }
                         }
                     }
                 }
@@ -98,6 +101,7 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignHCenter
 
                 SequentialAnimation {
+                    id: songNameLabelAnimation
                     running: true
                     loops: Animation.Infinite
 
@@ -173,8 +177,7 @@ ApplicationWindow {
 
                 Label {
                     id: songNameLabel
-//                    text: "Edvard Grieg - In the Hall of the Mountain King"
-//                    text: listView.model.text
+                    onTextChanged: songNameLabelAnimation.restart()
                     font.pixelSize: Qt.application.font.pixelSize * 1.4
                 }
 
