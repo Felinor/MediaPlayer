@@ -52,13 +52,13 @@ QHash<int, QByteArray> MediaModel::roleNames() const
     return roles;
 }
 
-void MediaModel::add()
+void MediaModel::add(QString data)
 {
     beginInsertRows(QModelIndex(), m_data.size(), m_data.size());
-    m_data.append("new");
+    m_data.append(data);
     endInsertRows();
 
-    m_data[0] = QString("Size: %1").arg(m_data.size());
+//    m_data[0] = QString("Size: %1").arg(m_data.size());
     QModelIndex index = createIndex(0, 0, static_cast<void *>(0));
     emit dataChanged(index, index);
 }
@@ -84,6 +84,8 @@ void MediaModel::createPlaylist(QVariant playlist)
     foreach (QUrl filename, list) {
         QString awesomePath = filename.toString().remove(0, 7);
         m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile(awesomePath)));
+        qDebug() << awesomePath;
+        add(awesomePath);
     }
     play();
 }

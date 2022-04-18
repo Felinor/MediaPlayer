@@ -24,7 +24,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role) const;
     virtual QHash<int, QByteArray> roleNames() const;
 
-    Q_INVOKABLE void add();
+    Q_INVOKABLE void add(QString data);
     Q_INVOKABLE void play();
     Q_INVOKABLE void stop();
     Q_INVOKABLE void createPlaylist(QVariant playlist);

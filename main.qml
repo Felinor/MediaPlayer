@@ -7,8 +7,8 @@ import QtQuick.Dialogs 1.3
 import MediaModel 1.0
 
 ApplicationWindow {
-    width: 640
-    height: 480
+    width: 800
+    height: 600
     visible: true
     minimumHeight: 240
     minimumWidth: 320
@@ -55,10 +55,34 @@ ApplicationWindow {
                 Layout.fillHeight: true
                 Layout.margins: 20
 
-                Image {
+//                Image {
+//                    anchors.fill: parent
+//                    fillMode: Image.PreserveAspectCrop
+//                    source: "album-cover.jpg"
+//                }
+
+                ListView {
+                    id: listView
                     anchors.fill: parent
-                    fillMode: Image.PreserveAspectCrop
-                    source: "album-cover.jpg"
+                    model: dataModel
+//                    spacing: 5
+                    clip: true
+                    delegate: Rectangle {
+                        width: parent.width
+                        height: 50
+                        border.width: 1
+                        border.color: "black"
+                        color: "lightgray"
+                        Text {
+                            anchors.fill: parent
+                            text: model.text
+                            verticalAlignment: Text.AlignVCenter
+                         }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: songNameLabel.text = model.text
+                        }
+                    }
                 }
             }
 
@@ -149,7 +173,8 @@ ApplicationWindow {
 
                 Label {
                     id: songNameLabel
-                    text: "Edvard Grieg - In the Hall of the Mountain King"
+//                    text: "Edvard Grieg - In the Hall of the Mountain King"
+//                    text: listView.model.text
                     font.pixelSize: Qt.application.font.pixelSize * 1.4
                 }
 
