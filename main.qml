@@ -131,6 +131,13 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
             }
+            RoundButton {
+                icon.name: "equalizer"
+                Layout.preferredWidth: 32
+                Layout.preferredHeight: 32
+                Layout.alignment: Qt.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
         }
 //    }
 

@@ -44,5 +44,7 @@
         <file>mediaplayer/32x32@2/home.png</file>
         <file>mediaplayer/32x32/star.png</file>
         <file>mediaplayer/32x32@2/star.png</file>
+        <file>mediaplayer/32x32/equalizer.png</file>
+        <file>mediaplayer/32x32@2/equalizer.png</file>
     </qresource>
 </RCC>
