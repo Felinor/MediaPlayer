@@ -7,37 +7,111 @@ import QtQuick.Dialogs 1.3
 import MediaModel 1.0
 
 ApplicationWindow {
+    id: root
     width: 800
     height: 600
     visible: true
     minimumHeight: 240
     minimumWidth: 320
     title: qsTr("Hello World")
+//    flags: Qt.FramelessWindowHint
+//    color: "transparent"
+//    Rectangle {
+//        x: 10
+//        y: 10
+//        width: parent.width-20
+//        height: parent.height-20
+//        radius: 15
+//    }
+
+//    Rectangle {
+//        color: "#3C096C"
+//        opacity: 0.8
+//        radius: 20
+//        anchors.fill: parent
+//    }
+    background: Rectangle {
+//        width: parent.width-20
+//        height: parent.height-20
+//        radius: 15
+        gradient: Gradient {
+            GradientStop { position: 0; color: "#ffffff" }
+            GradientStop { position: 1; color: "#c1bbf9" }
+        }
+    }
+
+    overlay.modal: Rectangle {
+        color: "#8f28282a"
+    }
+
+    overlay.modeless: Rectangle {
+        color: "#2f28282a"
+    }
 
     property int itemAngle: 30
     property int itemSize: 150
 
-    header: ToolBar {
-        RowLayout {
-            id: headerRowLayout
-            anchors.fill: parent
-            spacing: 0
+//    header: ToolBar {
+//        RowLayout {
+//            id: headerRowLayout
+//            anchors.fill: parent
+//            spacing: 0
 
-            ToolButton {
-                icon.name: "grid"
-            }
-            ToolButton {
-                icon.name: "settings"
-            }
-            ToolButton {
-                icon.name: "filter"
-            }
-            ToolButton {
-                icon.name: "music"
-            }
+//            ToolButton {
+//                icon.name: "grid"
+//            }
+//            ToolButton {
+//                icon.name: "settings"
+//            }
+//            ToolButton {
+//                icon.name: "filter"
+//            }
+//            ToolButton {
+//                icon.name: "music"
+//            }
 
-            Item {
-                Layout.fillWidth: true
+//            Item {
+//                Layout.fillWidth: true
+//            }
+//        }
+//    }
+
+    ListView {
+        id: view
+        width: 50
+        height: parent.height
+        anchors.left: parent.left
+        model: 1
+        delegate: Column {
+            width: view.width
+            height: view.height
+            spacing: 5
+
+            Rectangle {
+                width: parent.width
+                height: parent.height
+                color: "gray"
+                border {
+                    color: "black"
+                    width: 1
+                }
+
+                Column {
+                    width: parent.width
+                    height: parent.height
+                    spacing: 5
+
+                    RoundButton {
+                        icon.name: "home"
+                        icon.width: 32
+                        icon.height: 32
+                    }
+                    RoundButton {
+                        icon.name: "star"
+                        icon.width: 32
+                        icon.height: 32
+                    }
+                }
             }
         }
     }
@@ -67,25 +141,59 @@ ApplicationWindow {
                     model: dataModel
 //                    spacing: 5
                     clip: true
-                    delegate: Rectangle {
+
+                    delegate: Row {
                         width: parent.width
                         height: 50
-                        border.width: 1
-                        border.color: "black"
-                        color: "lightgray"
-                        Text {
-                            anchors.fill: parent
-                            text: model.text
-                            verticalAlignment: Text.AlignVCenter
-                         }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                songNameLabel.text = model.text
-                                dataModel.play()
+                        spacing: 5
+
+                        RoundButton {
+                            icon.name: "favorite"
+                            icon.width: 32
+                            icon.height: 32
+                        }
+
+                        Rectangle {
+                            width: parent.width
+                            height: parent.height
+                            border.width: 1
+                            border.color: "black"
+                            color: "lightgray"
+                            Text {
+                                anchors.fill: parent
+                                text: model.text
+                                verticalAlignment: Text.AlignVCenter
+                            }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    songNameLabel.text = model.text
+                                    dataModel.play()
+                                }
                             }
                         }
                     }
+
+
+//                    delegate: Rectangle {
+//                        width: parent.width
+//                        height: 50
+//                        border.width: 1
+//                        border.color: "black"
+//                        color: "lightgray"
+//                        Text {
+//                            anchors.fill: parent
+//                            text: model.text
+//                            verticalAlignment: Text.AlignVCenter
+//                         }
+//                        MouseArea {
+//                            anchors.fill: parent
+//                            onClicked: {
+//                                songNameLabel.text = model.text
+//                                dataModel.play()
+//                            }
+//                        }
+//                    }
                 }
             }
 

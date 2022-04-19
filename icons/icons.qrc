@@ -40,5 +40,9 @@
         <file>mediaplayer/32x32@2/play.png</file>
         <file>mediaplayer/32x32/add.png</file>
         <file>mediaplayer/32x32@2/add.png</file>
+        <file>mediaplayer/32x32/home.png</file>
+        <file>mediaplayer/32x32@2/home.png</file>
+        <file>mediaplayer/32x32/star.png</file>
+        <file>mediaplayer/32x32@2/star.png</file>
     </qresource>
 </RCC>
