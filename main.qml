@@ -76,58 +76,88 @@ ApplicationWindow {
 //        }
 //    }
 
-    ListView {
-        id: view
-        width: 50
-        height: parent.height
-        anchors.left: parent.left
-        model: 1
-        delegate: Column {
-            width: view.width
-            height: view.height
-            spacing: 5
+//    Rectangle {
+//        width: 50
+//        height: parent.height
+//        anchors.left: parent.left
+//        color: "gray"
+//        border {
+//            color: "black"
+//            width: 1
+//        }
 
-            Rectangle {
-                width: parent.width
-                height: parent.height
-                color: "gray"
-                border {
-                    color: "black"
-                    width: 1
-                }
+        Column {
+//            anchors.fill: parent
+            width: 50
+            height: parent.height
+            anchors.left: parent.left
+            topPadding: 20
+            spacing: 30
 
-                Column {
-                    width: parent.width
-                    height: parent.height
-                    spacing: 5
-
-                    RoundButton {
-                        icon.name: "home"
-                        icon.width: 32
-                        icon.height: 32
-                    }
-                    RoundButton {
-                        icon.name: "star"
-                        icon.width: 32
-                        icon.height: 32
-                    }
-                }
+            RoundButton {
+                icon.name: "home"
+//                icon.width: 32
+//                icon.height: 32
+                Layout.preferredWidth: 32
+                Layout.preferredHeight: 32
+//                Layout.alignment: Qt.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            RoundButton {
+                icon.name: "favorite"
+                Layout.preferredWidth: 32
+                Layout.preferredHeight: 32
+//                Layout.alignment: Qt.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            RoundButton {
+                icon.name: "music"
+                Layout.preferredWidth: 32
+                Layout.preferredHeight: 32
+//                Layout.alignment: Qt.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            RoundButton {
+                icon.name: "cloud"
+                Layout.preferredWidth: 32
+                Layout.preferredHeight: 32
+//                Layout.alignment: Qt.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+            RoundButton {
+                icon.name: "settings"
+                Layout.preferredWidth: 32
+                Layout.preferredHeight: 32
+                Layout.alignment: Qt.AlignHCenter
+                anchors.horizontalCenter: parent.horizontalCenter
             }
         }
-    }
+//    }
+
+
+
 
     MediaModel {
         id: dataModel
-    }    
+    }
+
+    Rectangle {
+        height: parent.height
+        width: parent.width - 50
+        anchors.right: parent.right
+        color: "skyblue"
+        border {
+            color: "red"
+            width: 1
+        }
 
         ColumnLayout {
-            anchors.fill: parent
+            width: parent.width
+            height: parent.height
+            Layout.margins: 20
             spacing: 10
 
-            Item {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.margins: 20
+
 
 //                Image {
 //                    anchors.fill: parent
@@ -137,7 +167,8 @@ ApplicationWindow {
 
                 ListView {
                     id: listView
-                    anchors.fill: parent
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
                     model: dataModel
 //                    spacing: 5
                     clip: true
@@ -195,7 +226,8 @@ ApplicationWindow {
 //                        }
 //                    }
                 }
-            }
+
+
 
             Item {
                 id: songLabelContainer
@@ -367,6 +399,7 @@ ApplicationWindow {
             }
         }
 
+
         FileDialog {
             id: fileDialog
             folder: shortcuts.music
@@ -378,6 +411,7 @@ ApplicationWindow {
                 dataModel.createPlaylist(fileUrls)
             }
         }
+    }
 
 //    PathView {
 //        id: view
