@@ -27,6 +27,10 @@ public:
     Q_INVOKABLE void add(QString data);
     Q_INVOKABLE void play();
     Q_INVOKABLE void stop();
+    Q_INVOKABLE void next();
+    Q_INVOKABLE void previous();
+    Q_INVOKABLE void random();
+    Q_INVOKABLE void currentItemInLoop();
     Q_INVOKABLE void createPlaylist(QVariant playlist);
 
 private:

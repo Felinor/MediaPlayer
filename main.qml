@@ -368,6 +368,7 @@ ApplicationWindow {
                     icon.name: "previous"
                     icon.width: 32
                     icon.height: 32
+                    onClicked: dataModel.previous()
                 }
                 RoundButton {
                     icon.name: "play"
@@ -384,16 +385,19 @@ ApplicationWindow {
                     icon.name: "next"
                     icon.width: 32
                     icon.height: 32
+                    onClicked: dataModel.next()
                 }
                 RoundButton {
                     icon.name: "repeat"
                     icon.width: 32
                     icon.height: 32
+                    onClicked: dataModel.currentItemInLoop()
                 }
                 RoundButton {
                     icon.name: "shuffle"
                     icon.width: 32
                     icon.height: 32
+                    onClicked: dataModel.random()
                 }
                 RoundButton {
                     icon.name: "add"

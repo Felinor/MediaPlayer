@@ -77,6 +77,26 @@ void MediaModel::stop()
     m_player->stop();
 }
 
+void MediaModel::next()
+{
+    m_playlist->next();
+}
+
+void MediaModel::previous()
+{
+    m_playlist->previous();
+}
+
+void MediaModel::random()
+{
+    m_playlist->setPlaybackMode(QMediaPlaylist::Random);
+}
+
+void MediaModel::currentItemInLoop()
+{
+    m_playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+}
+
 void MediaModel::createPlaylist(QVariant playlist)
 {
     QList<QUrl> list = qvariant_cast<QList<QUrl>>(playlist);
