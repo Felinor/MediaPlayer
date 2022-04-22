@@ -235,6 +235,31 @@ ApplicationWindow {
                 }
 
 
+                Slider {
+                    id: seekSlider
+                    from: 0
+                    to: dataModel.duration()
+                    value: dataModel.position()
+
+                    Layout.fillWidth: true
+
+                    ToolTip {
+                        parent: seekSlider.handle
+                        visible: seekSlider.pressed
+                        text: pad(Math.floor(value / 60)) + ":" + pad(Math.floor(value % 60))
+                        y: parent.height
+
+                        readonly property int value: seekSlider.valueAt(seekSlider.position)
+
+                        function pad(number) {
+                            if (number <= 9)
+                                return "0" + number;
+                            return number;
+                        }
+                    }
+                }
+
+
 
             Item {
                 id: songLabelContainer

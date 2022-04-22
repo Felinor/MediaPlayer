@@ -27,6 +27,8 @@ public:
     Q_INVOKABLE void add(QString data);
     Q_INVOKABLE void play();
     Q_INVOKABLE void pause();
+    Q_INVOKABLE int position();
+    Q_INVOKABLE int duration();
     Q_INVOKABLE void stop();
     Q_INVOKABLE void next();
     Q_INVOKABLE void previous();

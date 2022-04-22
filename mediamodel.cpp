@@ -66,12 +66,24 @@ void MediaModel::add(QString data)
 void MediaModel::play()
 {            
     m_player->play();
-    //    qDebug() << m_player->metaData(QMediaMetaData::Author) << "<==========";
+//    qDebug() << m_player->metaData(QMediaMetaData::Author) << "<==========";
+//    qDebug() << m_player->position()/1000 << "<==========";
+    qDebug() << m_player->duration()/1000 << "<==========";
 }
 
 void MediaModel::pause()
 {
     m_player->pause();
+}
+
+int MediaModel::position()
+{
+    return m_player->position()/1000;
+}
+
+int MediaModel::duration()
+{
+    return m_player->duration()/1000;
 }
 
 void MediaModel::stop()
