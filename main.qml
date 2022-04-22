@@ -195,7 +195,7 @@ ApplicationWindow {
                             width: parent.width
                             height: parent.height
                             border.width: 1
-                            border.color: "black"
+                            border.color: "red"
                             color: "lightgray"
                             Text {
                                 anchors.fill: parent
@@ -378,7 +378,7 @@ ApplicationWindow {
                         icon.name == "play" ? icon.name = "pause" : icon.name = "play"
                         if (icon.name == "play")
                             dataModel.play()
-                        else dataModel.stop()
+                        else dataModel.pause()
                     }
                 }
                 RoundButton {

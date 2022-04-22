@@ -64,12 +64,14 @@ void MediaModel::add(QString data)
 }
 
 void MediaModel::play()
-{        
-    m_player->setPlaylist(m_playlist);
-    m_playlist->setCurrentIndex(1);
-    m_playlist->setPlaybackMode(QMediaPlaylist::Loop);
+{            
     m_player->play();
     //    qDebug() << m_player->metaData(QMediaMetaData::Author) << "<==========";
+}
+
+void MediaModel::pause()
+{
+    m_player->pause();
 }
 
 void MediaModel::stop()
@@ -107,6 +109,9 @@ void MediaModel::createPlaylist(QVariant playlist)
         qDebug() << awesomePath;
         add(awesomePath);
     }
+    m_player->setPlaylist(m_playlist);
+    m_playlist->setCurrentIndex(1);
+    m_playlist->setPlaybackMode(QMediaPlaylist::Loop);
     play();
 }
 
