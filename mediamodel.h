@@ -35,6 +35,10 @@ public:
     Q_INVOKABLE void random();
     Q_INVOKABLE void currentItemInLoop();
     Q_INVOKABLE void createPlaylist(QVariant playlist);
+    void getMetaData(QMediaPlayer *player);
+
+public slots:
+    void metaDataChanged(QMediaPlayer::MediaStatus status);
 
 private:
     QStringList m_data;

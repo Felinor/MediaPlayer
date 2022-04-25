@@ -16,6 +16,12 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
 //    m_data.append("Jeremy Soul Dragonborne");
 //    m_data.append("Jeremy Soul Awake");
 //    m_data.append("Demon Hunter Death Flowers");
+
+//    connect(m_player, QOverload<>::of(&QMediaPlayer::metaDataChanged),
+//            this, &MediaModel::metaDataChanged);
+
+    connect(m_player, &QMediaPlayer::mediaStatusChanged,
+            this, &MediaModel::metaDataChanged);
 }
 
 int MediaModel::rowCount(const QModelIndex &parent) const
@@ -125,5 +131,44 @@ void MediaModel::createPlaylist(QVariant playlist)
     m_playlist->setCurrentIndex(1);
     m_playlist->setPlaybackMode(QMediaPlaylist::Loop);
     play();
+
+//    auto duration = m_player->metaData(QMediaMetaData::Title).toString();
+//    qDebug() << "Duration" << duration;
+}
+
+void MediaModel::getMetaData(QMediaPlayer *player)
+{
+       // Get the list of keys there is metadata available for
+       QStringList metadatalist = player->availableMetaData();
+
+       // Define variables to store metadata key and value
+       QString metadata_key;
+       QVariant var_data;
+
+       for (int i = 0; i < metadatalist.size(); ++i) {
+         // Get the key from the list
+         metadata_key = metadatalist.at(i);
+
+         // Get the value for the key
+         var_data = player->metaData(metadata_key);
+
+//         if (metadatalist.at(i) == "ContributingArtist" || "Title")
+//             m_name = player->metaData(metadatalist.at(i)).toString();
+//             qDebug() << m_name;
+
+        qDebug() << metadata_key << var_data.toString();
+       }
+}
+
+void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
+{
+//    qDebug() << "AlbumArtist" << m_player->metaData(QMediaMetaData::AlbumArtist).toString();
+//    qDebug() << "Title" << m_player->metaData(QMediaMetaData::Title).toString();
+//    qDebug() << "Duration" << m_player->metaData(QMediaMetaData::Duration).toInt();
+
+//    qDebug() << "STATUS" << status;
+    if (status == QMediaPlayer::BufferedMedia) {
+        getMetaData(m_player);
+    }
 }
 
