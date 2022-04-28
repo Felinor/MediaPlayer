@@ -78,9 +78,7 @@ void MediaModel::add(QString data)
 void MediaModel::play()
 {            
     m_player->play();
-//    qDebug() << m_player->metaData(QMediaMetaData::Author) << "<==========";
-//    qDebug() << m_player->position()/1000 << "<==========";
-    qDebug() << m_player->duration()/1000 << "<==========";
+    qDebug() << m_player->position()/1000 << "<==========";
 }
 
 void MediaModel::pause()
@@ -129,7 +127,12 @@ void MediaModel::createPlaylist(QVariant playlist)
     play();
 
 //    auto duration = m_player->metaData(QMediaMetaData::Title).toString();
-//    qDebug() << "Duration" << duration;
+    //    qDebug() << "Duration" << duration;
+}
+
+void MediaModel::setMediaPosition(int position)
+{
+    m_player->setPosition(position*1000);
 }
 
 void MediaModel::getMetaData(QMediaPlayer *player)

@@ -261,12 +261,11 @@ ApplicationWindow {
                     from: 0
                     to: dataModel.duration
                     value: dataModel.position
-                    onToChanged: console.log("Slider to = ", to)
-//                    to: 179
-//                    value: dataModel.positionChanged()
-//                    Component.onCompleted: valueAt(dataModel.positionChanged())
-//                    onMoved: console.log(dataModel.durationChanged(), "Duration")
-//                    Component.onCompleted: console.log(dataModel.durationChanged(), "Duration")
+                    onMoved: {
+                        console.log(value, "Position")
+//                        console.log(valueAt(position), "value")
+                        dataModel.setMediaPosition(valueAt(position))
+                    }
 
                     Layout.fillWidth: true
 
@@ -274,7 +273,6 @@ ApplicationWindow {
                         parent: seekSlider.handle
                         visible: seekSlider.pressed
                         text: pad(Math.floor(value / 60)) + ":" + pad(Math.floor(value % 60))
-//                        text: seekSlider.value
                         y: parent.height
 
                         readonly property int value: seekSlider.valueAt(seekSlider.position)

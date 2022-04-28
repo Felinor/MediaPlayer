@@ -35,6 +35,7 @@ public:
     Q_INVOKABLE void random();
     Q_INVOKABLE void currentItemInLoop();
     Q_INVOKABLE void createPlaylist(QVariant playlist);
+    Q_INVOKABLE void setMediaPosition(int position);
     void getMetaData(QMediaPlayer *player);
 
     int duration() const;
