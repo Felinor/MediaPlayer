@@ -11,6 +11,8 @@ class MediaModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
+    Q_PROPERTY(int duration READ duration WRITE setDuration NOTIFY durationChanged)
+    Q_PROPERTY(int position READ position WRITE setPosition NOTIFY positionChanged)
 
 public:
     MediaModel(QObject *parent = 0);
@@ -27,8 +29,6 @@ public:
     Q_INVOKABLE void add(QString data);
     Q_INVOKABLE void play();
     Q_INVOKABLE void pause();
-    Q_INVOKABLE int position();
-    Q_INVOKABLE int duration();
     Q_INVOKABLE void stop();
     Q_INVOKABLE void next();
     Q_INVOKABLE void previous();
@@ -37,13 +37,25 @@ public:
     Q_INVOKABLE void createPlaylist(QVariant playlist);
     void getMetaData(QMediaPlayer *player);
 
+    int duration() const;
+    void setDuration(int newDuration);
+
+    int position() const;
+    void setPosition(int newPosition);
+
 public slots:
-    void metaDataChanged(QMediaPlayer::MediaStatus status);
+    void metaDataChanged(QMediaPlayer::MediaStatus status);   
+
+signals:
+    void durationChanged();
+    void positionChanged();
 
 private:
     QStringList m_data;
     QMediaPlaylist *m_playlist = new QMediaPlaylist;
     QMediaPlayer *m_player = new QMediaPlayer(this);
+    int m_duration = 0;
+    int m_position = 0;
 };
 
 #endif // MEDIAMODEL_H

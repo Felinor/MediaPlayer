@@ -136,7 +136,7 @@ ApplicationWindow {
                 Layout.preferredWidth: 32
                 Layout.preferredHeight: 32
                 Layout.alignment: Qt.AlignHCenter
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.horizontalCenter: parent.horizontalCenter                
             }
         }
 //    }
@@ -234,12 +234,39 @@ ApplicationWindow {
 //                    }
                 }
 
+//                Connections {
+//                    target: dataModel
+
+//                    function onDurationReady() {
+//                        seekSlider.to = dataModel.duration()
+//                        console.log("Connect Duration = ", dataModel.duration())
+//                    }
+
+//                    function onPositionReady() {
+//                        seekSlider.value = dataModel.position()
+//                        console.log("Connect Position = ", dataModel.position())
+//                    }
+//                }
+
+                Timer {
+                    running: false
+                    interval: 1000
+                    repeat: true
+                    onTriggered: console.log("Position =",dataModel.position())
+//                    onTriggered: console.log("Position =",dataModel.positionReady())
+                }
 
                 Slider {
                     id: seekSlider
                     from: 0
-                    to: dataModel.duration()
-                    value: dataModel.position()
+                    to: dataModel.duration
+                    value: dataModel.position
+                    onToChanged: console.log("Slider to = ", to)
+//                    to: 179
+//                    value: dataModel.positionChanged()
+//                    Component.onCompleted: valueAt(dataModel.positionChanged())
+//                    onMoved: console.log(dataModel.durationChanged(), "Duration")
+//                    Component.onCompleted: console.log(dataModel.durationChanged(), "Duration")
 
                     Layout.fillWidth: true
 
@@ -247,6 +274,7 @@ ApplicationWindow {
                         parent: seekSlider.handle
                         visible: seekSlider.pressed
                         text: pad(Math.floor(value / 60)) + ":" + pad(Math.floor(value % 60))
+//                        text: seekSlider.value
                         y: parent.height
 
                         readonly property int value: seekSlider.valueAt(seekSlider.position)
@@ -430,6 +458,14 @@ ApplicationWindow {
                     icon.height: 32
                     onClicked: {
                         fileDialog.open()
+                    }
+                }
+                RoundButton {
+                    icon.name: ""
+                    icon.width: 32
+                    icon.height: 32
+                    onClicked: {
+                        seekSlider.to = Math.random() *100
                     }
                 }
             }

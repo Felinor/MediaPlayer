@@ -14,8 +14,8 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication::setApplicationName("Media Player");
     QGuiApplication::setApplicationVersion("1.0");
-    QGuiApplication::setOrganizationName("");
-    QGuiApplication::setOrganizationDomain("");
+    QGuiApplication::setOrganizationName("Media Player");
+    QGuiApplication::setOrganizationDomain("Media Player");
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 

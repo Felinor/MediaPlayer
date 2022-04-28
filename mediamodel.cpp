@@ -22,6 +22,12 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
 
     connect(m_player, &QMediaPlayer::mediaStatusChanged,
             this, &MediaModel::metaDataChanged);
+
+    connect(m_player, &QMediaPlayer::positionChanged,
+            this, [=]{ setPosition(m_player->position()/1000); });
+
+    connect(m_player, &QMediaPlayer::durationChanged,
+            this, [=]{ setDuration(m_player->duration()/1000); });
 }
 
 int MediaModel::rowCount(const QModelIndex &parent) const
@@ -80,16 +86,6 @@ void MediaModel::play()
 void MediaModel::pause()
 {
     m_player->pause();
-}
-
-int MediaModel::position()
-{
-    return m_player->position()/1000;
-}
-
-int MediaModel::duration()
-{
-    return m_player->duration()/1000;
 }
 
 void MediaModel::stop()
@@ -172,3 +168,28 @@ void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
     }
 }
 
+int MediaModel::duration() const
+{
+    return m_duration;
+}
+
+void MediaModel::setDuration(int newDuration)
+{
+    if (m_duration == newDuration)
+        return;
+    m_duration = newDuration;
+    emit durationChanged();
+}
+
+int MediaModel::position() const
+{
+    return m_position;
+}
+
+void MediaModel::setPosition(int newPosition)
+{
+    if (m_position == newPosition)
+        return;
+    m_position = newPosition;
+    emit positionChanged();
+}
