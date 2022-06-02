@@ -78,17 +78,20 @@ void MediaModel::add(QString data)
 void MediaModel::play()
 {            
     m_player->play();
+    emit playerStateChanged(m_player->state());
     qDebug() << m_player->position()/1000 << "<==========";
 }
 
 void MediaModel::pause()
 {
     m_player->pause();
+    emit playerStateChanged(m_player->state());
 }
 
 void MediaModel::stop()
 {
     m_player->stop();
+    emit playerStateChanged(m_player->state());
 }
 
 void MediaModel::next()

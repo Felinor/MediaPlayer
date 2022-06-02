@@ -50,6 +50,7 @@ public slots:
 signals:
     void durationChanged();
     void positionChanged();
+    void playerStateChanged(QMediaPlayer::State state);
 
 private:
     QStringList m_data;

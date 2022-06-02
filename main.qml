@@ -102,20 +102,25 @@ ApplicationWindow {
                 Layout.preferredHeight: 32
 //                Layout.alignment: Qt.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: console.log("will open home")
             }
             RoundButton {
                 icon.name: "favorite"
                 Layout.preferredWidth: 32
                 Layout.preferredHeight: 32
+                icon.width: 32
+                icon.height: 32
 //                Layout.alignment: Qt.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
-            }
+                onClicked: console.log("will open favorite")
+            }           
             RoundButton {
                 icon.name: "music"
                 Layout.preferredWidth: 32
                 Layout.preferredHeight: 32
 //                Layout.alignment: Qt.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: console.log("will open music")
             }
             RoundButton {
                 icon.name: "cloud"
@@ -123,6 +128,7 @@ ApplicationWindow {
                 Layout.preferredHeight: 32
 //                Layout.alignment: Qt.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: console.log("will open cloud")
             }
             RoundButton {
                 icon.name: "settings"
@@ -130,13 +136,15 @@ ApplicationWindow {
                 Layout.preferredHeight: 32
                 Layout.alignment: Qt.AlignHCenter
                 anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: console.log("will open settings")
             }
             RoundButton {
                 icon.name: "equalizer"
                 Layout.preferredWidth: 32
                 Layout.preferredHeight: 32
                 Layout.alignment: Qt.AlignHCenter
-                anchors.horizontalCenter: parent.horizontalCenter                
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: console.log("will open equalizer")
             }
         }
 //    }
@@ -183,13 +191,7 @@ ApplicationWindow {
                     delegate: Row {
                         width: parent.width
                         height: 50
-                        spacing: 5
-
-                        RoundButton {
-                            icon.name: "favorite"
-                            icon.width: 32
-                            icon.height: 32
-                        }
+                        spacing: 5                        
 
                         Rectangle {
                             width: parent.width
@@ -197,10 +199,19 @@ ApplicationWindow {
                             border.width: 1
                             border.color: "red"
                             color: "lightgray"
+
+                            RoundButton {
+                                icon.name: "favorite"
+                                icon.width: 32
+                                icon.height: 32
+                            }
+
                             Text {
                                 anchors.fill: parent
                                 text: model.text
+//                                Layout.alignment: Qt.AlignCenter
                                 verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
                             }
                             MouseArea {
                                 anchors.fill: parent
@@ -209,7 +220,7 @@ ApplicationWindow {
                                     dataModel.play()
                                 }
                             }
-                        }
+                        }                        
                     }
 
 
@@ -404,10 +415,19 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.bottomMargin: 10
 
+                Connections {
+                    target: dataModel
+
+                    function onPlayerStateChanged(state) {
+                        console.log("State = " + state)
+                    }
+                }
+
                 RoundButton {
                     icon.name: "favorite"
                     icon.width: 32
                     icon.height: 32
+                    onClicked: console.log("will open favorite")
                 }
                 RoundButton {
                     icon.name: "stop"
@@ -482,91 +502,5 @@ ApplicationWindow {
             }
         }
     }
-
-//    PathView {
-//        id: view
-
-//        anchors.fill: parent
-//        model: dataModel
-//        pathItemCount: 6
-
-//        path: Path {
-//            startX: 0
-//            startY: height / 2
-
-//            PathPercent { value: 0.0 }
-//            PathAttribute { name: "z"; value: 0 }
-//            PathAttribute { name: "angle"; value: itemAngle }
-//            PathAttribute { name: "origin"; value: 0 }
-//            PathLine {
-//                x: (view.width - itemSize) / 2
-//                y: view.height / 2
-//            }
-//            PathAttribute { name: "angle"; value: itemAngle }
-//            PathAttribute { name: "origin"; value: 0 }
-//            PathPercent { value: 0.49 }
-//            PathAttribute { name: "z"; value: 10 }
-
-//            PathLine { relativeX: 0; relativeY: 0 }
-
-//            PathAttribute { name: "angle"; value: 0 }
-//            PathLine {
-//                x: (view.width - itemSize) / 2 + itemSize
-//                y: view.height / 2
-//            }
-//            PathAttribute { name: "angle"; value: 0 }
-//            PathPercent { value: 0.51 }
-
-//            PathLine { relativeX: 0; relativeY: 0 }
-
-//            PathAttribute { name: "z"; value: 10 }
-//            PathAttribute { name: "angle"; value: -itemAngle }
-//            PathAttribute { name: "origin"; value: itemSize }
-//            PathLine {
-//                x: view.width
-//                y: view.height / 2
-//            }
-//            PathPercent { value: 1 }
-//            PathAttribute { name: "z"; value: 0 }
-//            PathAttribute { name: "angle"; value: -itemAngle }
-//            PathAttribute { name: "origin"; value: itemSize }
-//        }
-
-//        delegate: Rectangle {
-//            property real rotationAngle: PathView.angle
-//            property real rotationOrigin: PathView.origin
-
-//            width: itemSize
-//            height: width
-//            z: PathView.z
-//            color: model.color
-//            radius: 15
-//            clip: true
-//            border {
-//                color: "black"
-//                width: 1
-//            }
-//            transform: Rotation {
-//                id: rotation
-//                axis { x: 0; y: 1; z: 0 }
-//                angle: rotationAngle
-//                origin.x: rotationOrigin
-//            }
-
-//            Text {
-//                anchors.fill: parent
-//                font.pointSize: 16
-//                wrapMode: Text.WordWrap
-//                verticalAlignment: Text.AlignVCenter
-//                horizontalAlignment: Text.AlignHCenter
-//                text: model.text !== undefined ? model.text : model.name + "\n"+ model.track
-//            }
-
-//            MouseArea {
-//                anchors.fill: parent
-//                onClicked: console.log("Clicked", index)
-//            }
-//        }
-//    }
 }
 
