@@ -420,6 +420,10 @@ ApplicationWindow {
 
                     function onPlayerStateChanged(state) {
                         console.log("State = " + state)
+                        if (state === 1)
+                            playButton.icon.name = "pause"
+                        else
+                            playButton.icon.name = "play"
                     }
                 }
 
@@ -433,7 +437,7 @@ ApplicationWindow {
                     icon.name: "stop"
                     icon.width: 32
                     icon.height: 32
-//                    onClicked:
+                    onClicked: dataModel.stop()
                 }
                 RoundButton {
                     icon.name: "previous"
@@ -442,14 +446,12 @@ ApplicationWindow {
                     onClicked: dataModel.previous()
                 }
                 RoundButton {
+                    id: playButton
                     icon.name: "play"
                     icon.width: 32
                     icon.height: 32
                     onClicked: {
-                        icon.name == "play" ? icon.name = "pause" : icon.name = "play"
-                        if (icon.name == "play")
-                            dataModel.play()
-                        else dataModel.pause()
+                        icon.name == "play" ? dataModel.play() : dataModel.pause()
                     }
                 }
                 RoundButton {
