@@ -10,6 +10,7 @@ SOURCES += \
 
 RESOURCES += \
     album-cover.jpg \
+    music_note.png \
     imagine-assets/imagine-assets.qrc \
     icons/icons.qrc \
     qtquickcontrols2.conf \

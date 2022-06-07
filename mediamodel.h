@@ -37,7 +37,7 @@ public:
     Q_INVOKABLE void currentItemInLoop();
     Q_INVOKABLE void createPlaylist(QVariant playlist);
     Q_INVOKABLE void setMediaPosition(int position);
-    Q_INVOKABLE void playCurrentMedia(const int index);
+    Q_INVOKABLE void setCurrentMedia(const int index);
     void getMetaData(QMediaPlayer *player);
     QUrl getSourceImage(QImage image);
 
@@ -57,7 +57,7 @@ signals:
 
 private:
     QVariantList m_data;
-    QMediaPlaylist *m_playlist = new QMediaPlaylist;
+    QMediaPlaylist *m_playlist = new QMediaPlaylist;    
     QMediaPlayer *m_player = new QMediaPlayer(this);
     int m_duration = 0;
     int m_position = 0;

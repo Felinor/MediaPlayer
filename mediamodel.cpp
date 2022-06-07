@@ -141,8 +141,6 @@ void MediaModel::createPlaylist(QVariant playlist)
     }
 
     m_player->setPlaylist(m_playlist);
-
-//    m_playlist->setCurrentIndex(1);
     m_playlist->setPlaybackMode(QMediaPlaylist::Loop);
     play();
 }
@@ -152,7 +150,7 @@ void MediaModel::setMediaPosition(int position)
     m_player->setPosition(position*1000);
 }
 
-void MediaModel::playCurrentMedia(const int index)
+void MediaModel::setCurrentMedia(const int index)
 {
     m_playlist->setCurrentIndex(index);
 }
@@ -213,7 +211,7 @@ void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
 //        if (!image.isNull()) {
 //            imageUrl = getSourceImage(image);
 //        }
-//        else imageUrl = "album-cover.jpg";
+//        else imageUrl = "music_note.png";
 
 //        QVariantMap map;
 //        map.insert("artist", m_player->metaData(QMediaMetaData::ContributingArtist).toString());
