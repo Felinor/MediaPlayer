@@ -35,4 +35,5 @@ HEADERS += \
     mediamodel.h    
 
 DISTFILES += \
-    album-cover.jpg
+    album-cover.jpg \
+    music_note.png

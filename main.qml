@@ -160,7 +160,8 @@ ApplicationWindow {
         height: parent.height
         width: parent.width - 50
         anchors.right: parent.right
-        color: "skyblue"
+//        color: "skyblue"
+        color: "#f4f4fe"
         border {
             color: "red"
             width: 1
@@ -185,13 +186,31 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     model: dataModel
-//                    spacing: 5
-                    clip: true
+                    spacing: 5
+                    clip: true                   
+
+                    highlight: Rectangle {
+                        color: "green"
+                    }
+                    highlightFollowsCurrentItem: true
 
                     delegate: Row {
                         width: parent.width
                         height: 50
-                        spacing: 5                        
+                        spacing: 5
+
+//                        Rectangle {
+//                            width: 50
+//                            height: 50
+//                        }
+
+                        Image {
+//                            fillMode: Image.PreserveAspectCrop
+                            width: 50
+                            height: 50
+//                            source: "album-cover.jpg"
+                            source: model.coverImage
+                        }
 
                         Rectangle {
                             width: parent.width
@@ -200,15 +219,16 @@ ApplicationWindow {
                             border.color: "red"
                             color: "lightgray"
 
-                            RoundButton {
-                                icon.name: "favorite"
-                                icon.width: 32
-                                icon.height: 32
-                            }
+//                            RoundButton {
+//                                icon.name: "favorite"
+//                                icon.width: 32
+//                                icon.height: 32
+//                            }
 
                             Text {
                                 anchors.fill: parent
-                                text: model.text
+                                text: model.artist
+//                                text: model.artist + " - " + model.title
 //                                Layout.alignment: Qt.AlignCenter
                                 verticalAlignment: Text.AlignVCenter
                                 horizontalAlignment: Text.AlignHCenter
@@ -216,8 +236,10 @@ ApplicationWindow {
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: {
-                                    songNameLabel.text = model.text
-                                    dataModel.play()
+                                    songNameLabel.text = model.title
+                                    dataModel.playCurrentMedia(model.index)
+                                    ListView.currentIndex = model.index
+//                                    console.log(model.index, "Model Index")
                                 }
                             }
                         }                        
@@ -243,7 +265,7 @@ ApplicationWindow {
 //                            }
 //                        }
 //                    }
-                }
+                }                
 
 //                Connections {
 //                    target: dataModel
@@ -269,6 +291,7 @@ ApplicationWindow {
 
                 Slider {
                     id: seekSlider
+                    Layout.fillWidth: true
                     from: 0
                     to: dataModel.duration
                     value: dataModel.position
@@ -278,7 +301,11 @@ ApplicationWindow {
                         dataModel.setMediaPosition(valueAt(position))
                     }
 
-                    Layout.fillWidth: true
+//                    MouseArea {
+//                        anchors.fill: parent
+//                        hoverEnabled: true
+//                        onEntered: cursorShape = Qt.PointingHandCursor
+//                    }
 
                     ToolTip {
                         parent: seekSlider.handle

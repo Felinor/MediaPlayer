@@ -18,15 +18,16 @@ public:
     MediaModel(QObject *parent = 0);
 
     enum Roles {
-        ColorRole = Qt::UserRole + 1,
-        TextRole
+        Artist = Qt::UserRole,
+        Title = Qt::UserRole + 2,
+        CoverImage = Qt::UserRole + 3
     };
 
-    virtual int rowCount(const QModelIndex &parent) const;
-    virtual QVariant data(const QModelIndex &index, int role) const;
-    virtual QHash<int, QByteArray> roleNames() const;
+    virtual int rowCount(const QModelIndex &parent) const override;
+    virtual QVariant data(const QModelIndex &index, int role) const override;
+    virtual QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void add(QString data);
+    Q_INVOKABLE void add(QVariantMap data);
     Q_INVOKABLE void play();
     Q_INVOKABLE void pause();
     Q_INVOKABLE void stop();
@@ -36,7 +37,9 @@ public:
     Q_INVOKABLE void currentItemInLoop();
     Q_INVOKABLE void createPlaylist(QVariant playlist);
     Q_INVOKABLE void setMediaPosition(int position);
+    Q_INVOKABLE void playCurrentMedia(const int index);
     void getMetaData(QMediaPlayer *player);
+    QUrl getSourceImage(QImage image);
 
     int duration() const;
     void setDuration(int newDuration);
@@ -53,7 +56,7 @@ signals:
     void playerStateChanged(QMediaPlayer::State state);
 
 private:
-    QStringList m_data;
+    QVariantList m_data;
     QMediaPlaylist *m_playlist = new QMediaPlaylist;
     QMediaPlayer *m_player = new QMediaPlayer(this);
     int m_duration = 0;

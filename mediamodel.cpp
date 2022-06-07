@@ -6,6 +6,7 @@
 #include <QStandardPaths>
 #include <QMediaMetaData>
 #include <QMediaObject>
+#include <QBuffer>
 
 
 MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
@@ -28,6 +29,9 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
 
     connect(m_player, &QMediaPlayer::durationChanged,
             this, [=]{ setDuration(m_player->duration()/1000); });
+
+    connect(m_player, &QMediaPlayer::durationChanged,
+            this, [&](qint64 dur) { qDebug() << "duration = " << dur; });
 }
 
 int MediaModel::rowCount(const QModelIndex &parent) const
@@ -45,11 +49,17 @@ QVariant MediaModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
+    int row = index.row();
+
+    const QVariantMap map = m_data.at(row).toMap();
+
     switch (role) {
-    case ColorRole:
-        return QVariant(index.row() < 2 ? "orange" : "skyblue");
-    case TextRole:
-        return m_data.at(index.row());
+    case Artist:
+        return map.value("artist");
+    case Title:
+        return map.value("title");
+    case CoverImage:
+        return map.value("coverImage");
     default:
         return QVariant();
     }
@@ -58,13 +68,14 @@ QVariant MediaModel::data(const QModelIndex &index, int role) const
 QHash<int, QByteArray> MediaModel::roleNames() const
 {
     QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
-    roles[ColorRole] = "color";
-    roles[TextRole] = "text";
+    roles[Artist] = "artist";
+    roles[Title] = "title";
+    roles[CoverImage] = "coverImage";
 
     return roles;
 }
 
-void MediaModel::add(QString data)
+void MediaModel::add(QVariantMap data)
 {
     beginInsertRows(QModelIndex(), m_data.size(), m_data.size());
     m_data.append(data);
@@ -116,26 +127,34 @@ void MediaModel::currentItemInLoop()
 
 void MediaModel::createPlaylist(QVariant playlist)
 {
-    QList<QUrl> list = qvariant_cast<QList<QUrl>>(playlist);
+    QList<QUrl> list = qvariant_cast<QList<QUrl>>(playlist);     
 
-    foreach (QUrl filename, list) {
-        QString awesomePath = filename.toString().remove(0, 7);
-        m_playlist->addMedia(QMediaContent(QUrl::fromLocalFile(awesomePath)));
-        qDebug() << awesomePath;
-        add(awesomePath);
+    foreach (const QUrl filename, list) {
+        m_playlist->addMedia(filename);
+
+        QString mediaName = QFileInfo(filename.path()).fileName(); //baseName()
+
+        QVariantMap map;
+        map.insert("artist", mediaName);
+        map.insert("title", "");
+        add(map);
     }
+
     m_player->setPlaylist(m_playlist);
-    m_playlist->setCurrentIndex(1);
+
+//    m_playlist->setCurrentIndex(1);
     m_playlist->setPlaybackMode(QMediaPlaylist::Loop);
     play();
-
-//    auto duration = m_player->metaData(QMediaMetaData::Title).toString();
-    //    qDebug() << "Duration" << duration;
 }
 
 void MediaModel::setMediaPosition(int position)
 {
     m_player->setPosition(position*1000);
+}
+
+void MediaModel::playCurrentMedia(const int index)
+{
+    m_playlist->setCurrentIndex(index);
 }
 
 void MediaModel::getMetaData(QMediaPlayer *player)
@@ -154,23 +173,53 @@ void MediaModel::getMetaData(QMediaPlayer *player)
          // Get the value for the key
          var_data = player->metaData(metadata_key);
 
-//         if (metadatalist.at(i) == "ContributingArtist" || "Title")
-//             m_name = player->metaData(metadatalist.at(i)).toString();
-//             qDebug() << m_name;
+//         if (metadata_key == "Title") {
+//             metadata.insert("title", var_data.toString());
+//             qDebug() << var_data.toString();
+//         }
 
-        qDebug() << metadata_key << var_data.toString();
+//         else if (metadata_key == "ContributingArtist")
+//             metadata.insert("artist", var_data.toString());
+//             qDebug() << var_data.toString();
+
+//        qDebug() << metadata_key << var_data.toString();
        }
 }
 
-void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
+QUrl MediaModel::getSourceImage(QImage image)
 {
-//    qDebug() << "AlbumArtist" << m_player->metaData(QMediaMetaData::AlbumArtist).toString();
-//    qDebug() << "Title" << m_player->metaData(QMediaMetaData::Title).toString();
-//    qDebug() << "Duration" << m_player->metaData(QMediaMetaData::Duration).toInt();
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+    buffer.open(QIODevice::WriteOnly);
+    image.save(&buffer, "png");
+    QString base64 = QString::fromUtf8(byteArray.toBase64());
+    QUrl imageUrl = QString("data:image/png;base64,") + base64;
+    return imageUrl;
+}
 
+void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
+{   
 //    qDebug() << "STATUS" << status;
     if (status == QMediaPlayer::BufferedMedia) {
-        getMetaData(m_player);
+        qDebug() << "AlbumArtist:" << m_player->metaData(QMediaMetaData::ContributingArtist).toString();
+        qDebug() << "Title:" << m_player->metaData(QMediaMetaData::Title).toString();
+        qDebug() << "Duration:" << m_player->metaData(QMediaMetaData::Duration).toInt();
+        qDebug() << "CoverArtImage:" << m_player->metaData(QMediaMetaData::CoverArtImage);
+//        getMetaData(m_player);
+
+//        QUrl imageUrl;
+//        QImage image = m_player->metaData(QMediaMetaData::CoverArtImage).value<QImage>();
+
+//        if (!image.isNull()) {
+//            imageUrl = getSourceImage(image);
+//        }
+//        else imageUrl = "album-cover.jpg";
+
+//        QVariantMap map;
+//        map.insert("artist", m_player->metaData(QMediaMetaData::ContributingArtist).toString());
+//        map.insert("title", m_player->metaData(QMediaMetaData::Title).toString());
+//        map.insert("coverImage", imageUrl);
+//        add(map);
     }
 }
 
