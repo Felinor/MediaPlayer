@@ -154,6 +154,7 @@ ApplicationWindow {
         id: dataModel
     }
 
+//  Debug draw rect
     Rectangle {
         height: parent.height
         width: parent.width - 50
@@ -191,12 +192,23 @@ ApplicationWindow {
                     highlight: Rectangle {
                         color: "green"
                     }
-                    highlightFollowsCurrentItem: true
+                    highlightFollowsCurrentItem: true                    
+
+//                    Connections {
+//                        target: dataModel
+
+//                        function onPlayerStateChanged(state) {
+//                            if (state === 1)
+//                                songNameLabel.text = "1515151511"
+//                            else
+//                                songNameLabel.text = ""
+//                        }
+//                    }
 
                     delegate: Row {
                         width: parent.width
                         height: 50
-                        spacing: 5
+                        spacing: 5                     
 
                         Image {
 //                            fillMode: Image.PreserveAspectCrop
@@ -217,7 +229,7 @@ ApplicationWindow {
 //                                icon.name: "favorite"
 //                                icon.width: 32
 //                                icon.height: 32
-//                            }
+//                            }                            
 
                             Text {
                                 anchors.fill: parent
@@ -285,139 +297,138 @@ ApplicationWindow {
 //                    onTriggered: console.log("Position =",dataModel.positionReady())
                 }
 
+//              Debug draw rect
                 Rectangle {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: parent.height / 5
+                    Layout.alignment: Qt.AlignBottom
                     color: "plum"
                     opacity: 0.8
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.alignment: Qt.AlignBottom
 
                     ColumnLayout {
                         width: parent.width
                         height: parent.height
 //                        spacing: 25
 
+//                      songLabelContainer
+                        Rectangle {
+                            id: songLabelContainer
+                            clip: true
+                            border.color: "red"
+//                            border.width: 2
 
-                        //          songLabelContainer
-                                    Rectangle {
-                                        id: songLabelContainer
-                                        clip: true
-                                        border.color: "red"
-                        //                border.width: 2
+//                            Layout.fillWidth: true
+                            Layout.preferredWidth: songNameLabel.width / 2
+                            Layout.preferredHeight: songNameLabel.implicitHeight
+                            Layout.alignment: Qt.AlignCenter
+                            Layout.topMargin: 10
 
-//                                        Layout.fillWidth: true
-                                        Layout.preferredWidth: songNameLabel.width / 2
-                                        Layout.preferredHeight: songNameLabel.implicitHeight
-                                        Layout.alignment: Qt.AlignCenter
+                            SequentialAnimation {
+                                id: songNameLabelAnimation
+                                running: true
+                                loops: Animation.Infinite
 
-                                        SequentialAnimation {
-                                            id: songNameLabelAnimation
-                                            running: true
-                                            loops: Animation.Infinite
-
-                                            PauseAnimation {
-                                                duration: 2000
-                                            }
-                                            ParallelAnimation {
-                                                XAnimator {
-                                                    target: songNameLabel
-                                                    from: 0
-                                                    to: songLabelContainer.width - songNameLabel.implicitWidth
-                                                    duration: 5000
-                                                }
-                                                OpacityAnimator {
-                                                    target: leftGradient
-                                                    from: 0
-                                                    to: 1
-                                                }
-                                            }
-                                            OpacityAnimator {
-                                                target: rightGradient
-                                                from: 1
-                                                to: 0
-                                            }
-                                            PauseAnimation {
-                                                duration: 1000
-                                            }
-                                            OpacityAnimator {
-                                                target: rightGradient
-                                                from: 0
-                                                to: 1
-                                            }
-                                            ParallelAnimation {
-                                                XAnimator {
-                                                    target: songNameLabel
-                                                    from: songLabelContainer.width - songNameLabel.implicitWidth
-                                                    to: 0
-                                                    duration: 5000
-                                                }
-                                                OpacityAnimator {
-                                                    target: leftGradient
-                                                    from: 0
-                                                    to: 1
-                                                }
-                                            }
-                                            OpacityAnimator {
-                                                target: leftGradient
-                                                from: 1
-                                                to: 0
-                                            }
-                                        }
-
-                                        Rectangle {
-                                            id: leftGradient
-                                            gradient: Gradient {
-                                                GradientStop {
-                                                    position: 0
-                                                    color: "#dfe4ea"
-                                                }
-                                                GradientStop {
-                                                    position: 1
-                                                    color: "#00dfe4ea"
-                                                }
-                                            }
-
-                                            width: height
-                                            height: parent.height
-                                            anchors.left: parent.left
-                                            z: 1
-                                            rotation: -90
-                                            opacity: 0
-                                        }
-
-                                        Label {
-                                            id: songNameLabel
-                                            onTextChanged: songNameLabelAnimation.restart()
-                                            font.pixelSize: Qt.application.font.pixelSize * 1.4
-                                        }
-
-                                        Rectangle {
-                                            id: rightGradient
-                                            gradient: Gradient {
-                                                GradientStop {
-                                                    position: 0
-                                                    color: "#00dfe4ea"
-                                                }
-                                                GradientStop {
-                                                    position: 1
-                                                    color: "#dfe4ea"
-                                                }
-                                            }
-
-                                            width: height
-                                            height: parent.height
-                                            anchors.right: parent.right
-                                            rotation: -90
-                                        }
+                                PauseAnimation {
+                                    duration: 2000
+                                }
+                                ParallelAnimation {
+                                    XAnimator {
+                                        target: songNameLabel
+                                        from: 0
+                                        to: songLabelContainer.width - songNameLabel.implicitWidth
+                                        duration: 5000
                                     }
+                                    OpacityAnimator {
+                                        target: leftGradient
+                                        from: 0
+                                        to: 1
+                                    }
+                                }
+                                OpacityAnimator {
+                                    target: rightGradient
+                                    from: 1
+                                    to: 0
+                                }
+                                PauseAnimation {
+                                    duration: 1000
+                                }
+                                OpacityAnimator {
+                                    target: rightGradient
+                                    from: 0
+                                    to: 1
+                                }
+                                ParallelAnimation {
+                                    XAnimator {
+                                        target: songNameLabel
+                                        from: songLabelContainer.width - songNameLabel.implicitWidth
+                                        to: 0
+                                        duration: 5000
+                                    }
+                                    OpacityAnimator {
+                                        target: leftGradient
+                                        from: 0
+                                        to: 1
+                                    }
+                                }
+                                OpacityAnimator {
+                                    target: leftGradient
+                                    from: 1
+                                    to: 0
+                                }
+                            }
+
+                            Rectangle {
+                                id: leftGradient
+                                gradient: Gradient {
+                                    GradientStop {
+                                        position: 0
+                                        color: "#dfe4ea"
+                                    }
+                                    GradientStop {
+                                        position: 1
+                                        color: "#00dfe4ea"
+                                    }
+                                }
+
+                                width: height
+                                height: parent.height
+                                anchors.left: parent.left
+                                z: 1
+                                rotation: -90
+                                opacity: 0
+                            }
+
+                            Label {
+                                id: songNameLabel
+                                onTextChanged: songNameLabelAnimation.restart()
+                                font.pixelSize: Qt.application.font.pixelSize * 1.4
+                            }
+
+                            Rectangle {
+                                id: rightGradient
+                                gradient: Gradient {
+                                    GradientStop {
+                                        position: 0
+                                        color: "#00dfe4ea"
+                                    }
+                                    GradientStop {
+                                        position: 1
+                                        color: "#dfe4ea"
+                                    }
+                                }
+
+                                width: height
+                                height: parent.height
+                                anchors.right: parent.right
+                                rotation: -90
+                            }
+                        }
 
                 Slider {
                     id: seekSlider
                     Layout.preferredWidth: parent.width / 2
-//                    Layout.preferredHeight: 35
-//                    Layout.fillHeight: true
                     Layout.alignment: Qt.AlignCenter
-//                    Layout.fillWidth: true
+
                     from: 0
                     to: dataModel.duration
                     value: dataModel.position
@@ -431,13 +442,18 @@ ApplicationWindow {
 //                        anchors.fill: parent
 //                        hoverEnabled: true
 //                        onEntered: cursorShape = Qt.PointingHandCursor
-//                    }
+//                    }                    
 
                     ToolTip {
+                        id: toolTip
                         parent: seekSlider.handle
                         visible: seekSlider.pressed
                         text: pad(Math.floor(value / 60)) + ":" + pad(Math.floor(value % 60))
                         y: parent.height
+//                        background: Item {
+//                            width: 80
+//                            height: 70
+//                        }
 
                         readonly property int value: seekSlider.valueAt(seekSlider.position)
 
@@ -452,11 +468,8 @@ ApplicationWindow {
 //          Bottom panel
             RowLayout {
                 Layout.alignment: Qt.AlignCenter
-                height: 35
-//                Layout.preferredHeight: 35
-//                Layout.fillHeight: true
+                Layout.bottomMargin: 10
                 spacing: 8
-//                Layout.bottomMargin: 10
 
                 Connections {
                     target: dataModel
@@ -476,11 +489,17 @@ ApplicationWindow {
                     icon.height: 32
                     onClicked: console.log("will open favorite")
                 }
+//                RoundButton {
+//                    icon.name: "stop"
+//                    icon.width: 32
+//                    icon.height: 32
+//                    onClicked: dataModel.stop()
+//                }
                 RoundButton {
-                    icon.name: "stop"
+                    icon.name: "shuffle"
                     icon.width: 32
                     icon.height: 32
-                    onClicked: dataModel.stop()
+                    onClicked: dataModel.random()
                 }
                 RoundButton {
                     icon.name: "previous"
@@ -508,13 +527,7 @@ ApplicationWindow {
                     icon.width: 32
                     icon.height: 32
                     onClicked: dataModel.currentItemInLoop()
-                }
-                RoundButton {
-                    icon.name: "shuffle"
-                    icon.width: 32
-                    icon.height: 32
-                    onClicked: dataModel.random()
-                }
+                }                
                 RoundButton {
                     icon.name: "add"
                     icon.width: 32
@@ -535,7 +548,6 @@ ApplicationWindow {
         }
         }
         }
-
 
         FileDialog {
             id: fileDialog

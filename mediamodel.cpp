@@ -142,7 +142,7 @@ void MediaModel::createPlaylist(QVariant playlist)
 
     m_player->setPlaylist(m_playlist);
     m_playlist->setPlaybackMode(QMediaPlaylist::Loop);
-    play();
+//    play();
 }
 
 void MediaModel::setMediaPosition(int position)
