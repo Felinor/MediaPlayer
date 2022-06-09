@@ -5,6 +5,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Dialogs 1.3
 import MediaModel 1.0
+import QtQuick.Controls 1.4 as QQ1
 
 ApplicationWindow {
     id: root
@@ -179,6 +180,50 @@ ApplicationWindow {
 //                    fillMode: Image.PreserveAspectCrop
 //                    source: "album-cover.jpg"
 //                }
+
+            QQ1.TableView {
+                id: tableView
+                clip: true
+                Layout.fillWidth: true
+                Layout.preferredHeight: parent.height / 2
+                model: dataModel
+//                backgroundVisible: false
+
+                QQ1.TableViewColumn {
+                    id: column_0
+                    width: 100
+                    title: "#"
+                    role: ""
+                }
+
+                QQ1.TableViewColumn {
+                    id: column_1
+                    width: 100
+                    title: "TITLE"
+                    role: "title"
+                }
+
+                QQ1.TableViewColumn {
+                    id: column_2
+                    width: 100
+                    title: "ARTIST"
+                    role: "artist"
+                }
+
+                QQ1.TableViewColumn {
+                    id: column_3
+                    width: 100
+                    title: "TIME"
+                    role: ""
+                }
+
+                QQ1.TableViewColumn {
+                    id: column_4
+                    width: 100
+                    title: "ALBUM"
+                    role: ""
+                }
+            }
 
 //              List View
                 ListView {
