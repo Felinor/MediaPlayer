@@ -38,3 +38,12 @@ HEADERS += \
 DISTFILES += \
     album-cover.jpg \
     music_note.png
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../MediaInfoLib/Project/CMake/release/ -lmediainfo
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../MediaInfoLib/Project/CMake/debug/ -lmediainfo
+else:unix: LIBS += -L$$PWD/../MediaInfoLib/Project/CMake/ -lmediainfo
+
+INCLUDEPATH += /home/felinor/felinor_workspace/MediaInfoLib/Source/MediaInfo
+DEPENDPATH += /home/felinor/felinor_workspace/MediaInfoLib/Source/MediaInfo
+
+unix:!macx: LIBS += -ltag

@@ -7,6 +7,8 @@
 #include <QMediaPlaylist>
 #include <QMediaPlayer>
 
+#include <taglib/fileref.h>
+
 class MediaModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -20,7 +22,9 @@ public:
     enum Roles {
         Artist = Qt::UserRole,
         Title = Qt::UserRole + 2,
-        CoverImage = Qt::UserRole + 3
+        CoverImage = Qt::UserRole + 3,
+        Time = Qt::UserRole + 4,
+        Album = Qt::UserRole + 5
     };
 
     virtual int rowCount(const QModelIndex &parent) const override;
@@ -56,11 +60,16 @@ signals:
     void playerStateChanged(QMediaPlayer::State state);
 
 private:
+    void readMetadata(TagLib::FileRef &reference);
+
+private:
     QVariantList m_data;
     QMediaPlaylist *m_playlist = new QMediaPlaylist;    
     QMediaPlayer *m_player = new QMediaPlayer(this);
     int m_duration = 0;
     int m_position = 0;
+
+    QString testString;
 };
 
 #endif // MEDIAMODEL_H

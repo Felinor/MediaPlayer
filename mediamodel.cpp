@@ -8,6 +8,24 @@
 #include <QMediaObject>
 #include <QBuffer>
 
+#include <string>
+#include <iostream>
+#include <iomanip>
+//#include "ZenLib/Ztring.h"
+//#include "MediaInfo.h"
+
+#include <taglib/tag.h>
+#include <taglib/tstring.h>
+#include <taglib/fileref.h>
+#include <taglib/audioproperties.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/mpegfile.h>
+
+//using namespace TagLib;
+using namespace std;
+
+//using namespace MediaInfoLib;
+//using namespace ZenLib;
 
 MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
 {
@@ -32,6 +50,19 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
 
     connect(m_player, &QMediaPlayer::durationChanged,
             this, [&](qint64 dur) { qDebug() << "duration = " << dur; });
+
+//    TagLib::FileRef f("/home/felinor/Музыка/Demon_Hunter_-_Artificial_Light.mp3");
+
+//    f.tag()->setAlbum("Extremist");
+//    f.tag()->setYear(2014);
+//    f.save();
+
+//    readMetadata(f);
+
+//    TagLib::MPEG::File file("/home/felinor/Музыка/Demon_Hunter_-_Artificial_Light.mp3");
+//    TagLib::ByteVector handle = "TPE2";
+//    TagLib::String value = "bar";
+//    TagLib::ID3v2::Tag *tag = file.ID3v2Tag(true);
 }
 
 int MediaModel::rowCount(const QModelIndex &parent) const
@@ -60,6 +91,10 @@ QVariant MediaModel::data(const QModelIndex &index, int role) const
         return map.value("title");
     case CoverImage:
         return map.value("coverImage");
+    case Time:
+        return map.value("time");
+    case Album:
+        return map.value("album");
     default:
         return QVariant();
     }
@@ -71,6 +106,8 @@ QHash<int, QByteArray> MediaModel::roleNames() const
     roles[Artist] = "artist";
     roles[Title] = "title";
     roles[CoverImage] = "coverImage";
+    roles[Time] = "time";
+    roles[Album] = "album";
 
     return roles;
 }
@@ -127,18 +164,37 @@ void MediaModel::currentItemInLoop()
 
 void MediaModel::createPlaylist(QVariant playlist)
 {
-    QList<QUrl> list = qvariant_cast<QList<QUrl>>(playlist);     
+    QList<QUrl> list = qvariant_cast<QList<QUrl>>(playlist);
 
     foreach (const QUrl filename, list) {
         m_playlist->addMedia(filename);
 
         QString mediaName = QFileInfo(filename.path()).fileName(); //baseName()
 
+//        QString path = filename.path();
+//        testMediaInfoLib(path.toStdString());
+//        qDebug() << filename.path();
+        qDebug() << filename.toString();
+
+//        QByteArray byteArray = QFileInfo(filename.path()).fileName().toLocal8Bit();
+//        char *name = byteArray.data();
+
+//        qDebug() << name << "NAME";
+
+//        testString = filename.toString();
+
+//        TagLib::FileRef f(QFile::encodeName(filename.toString()).constData());
+
+        TagLib::FileRef f(filename.path().toStdString().c_str());
+        readMetadata(f);
+
         QVariantMap map;
         map.insert("artist", mediaName);
         map.insert("title", "");
         add(map);
-    }
+    }   
+
+//    testMediaInfoLib();
 
     m_player->setPlaylist(m_playlist);
     m_playlist->setPlaybackMode(QMediaPlaylist::Loop);
@@ -219,6 +275,28 @@ void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
 //        map.insert("coverImage", imageUrl);
 //        add(map);
     }
+}
+
+void MediaModel::readMetadata(TagLib::FileRef &reference)
+{
+    cout << "-- TAG (basic) --" << endl;
+    cout << "title   - \"" << reference.tag()->title()   << "\"" << endl;
+    cout << "artist  - \"" << reference.tag()->artist()  << "\"" << endl;
+    cout << "album   - \"" << reference.tag()->album()   << "\"" << endl;
+    cout << "year    - \"" << reference.tag()->year()    << "\"" << endl;
+    cout << "comment - \"" << reference.tag()->comment() << "\"" << endl;
+    cout << "track   - \"" << reference.tag()->track()   << "\"" << endl;
+    cout << "genre   - \"" << reference.tag()->genre()   << "\"" << endl;
+
+    TagLib::AudioProperties *properties = reference.audioProperties();
+    int seconds = properties->length() % 60;
+    int minutes = (properties->length() - seconds) / 60;
+
+    cout << "-- AUDIO --" << endl;
+    cout << "bitrate     - " << properties->bitrate() << endl;
+    cout << "sample rate - " << properties->sampleRate() << endl;
+    cout << "channels    - " << properties->channels() << endl;
+    cout << "length      - " << minutes << ":" << setfill('0') << setw(2) << seconds << endl;
 }
 
 int MediaModel::duration() const
