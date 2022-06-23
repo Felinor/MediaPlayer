@@ -11,7 +11,7 @@ Item {
 
         Text {
             width: parent.width
-            text: styleData.value
+            text: styleData.column === 0 ? styleData.row + 1 : styleData.value
             elide: Text.ElideRight
             color: "white"
             font {

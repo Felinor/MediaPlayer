@@ -58,6 +58,9 @@ ItemDelegate {
 //                console.log(tableView.model.getIndex(styleData.row) === styleData.row)
 //                console.log(dataModel.count)
 //                console.log(tableView.model.get(styleData.row).keyRole)
+
+                songNameLabel.text = model.artist
+                dataModel.setCurrentMedia(model.index)
             }
 
             else {

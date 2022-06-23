@@ -48,7 +48,7 @@ ApplicationWindow {
 
     overlay.modeless: Rectangle {
         color: "#2f28282a"
-    }
+    }        
 
     property int itemAngle: 30
     property int itemSize: 150
