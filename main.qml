@@ -187,39 +187,45 @@ ApplicationWindow {
                 Layout.fillHeight: true
                 alternatingRowColors: false
                 backgroundVisible: false
+                onWidthChanged: resizeColumns()
                 model: dataModel
+
+                function resizeColumns() {
+                    tableView.resizeColumnsToContents()
+                    column_4.width = tableView.contentItem.width -
+                            (column_1.width + column_2.width + column_3.width)
+                }
 
                 QQ1.TableViewColumn {
                     id: column_0
-                    width: 100
+                    width: tableView.contentItem.width / (tableView.columnCount * 2)
                     title: "#"
                     role: ""
                 }
 
                 QQ1.TableViewColumn {
                     id: column_1
-                    width: 100
+                    width: tableView.contentItem.width / (tableView.columnCount -1)
                     title: "TITLE"
                     role: "title"
                 }
 
                 QQ1.TableViewColumn {
                     id: column_2
-                    width: 100
+                    width: tableView.contentItem.width / (tableView.columnCount -1)
                     title: "ARTIST"
                     role: "artist"
                 }
 
                 QQ1.TableViewColumn {
                     id: column_3
-                    width: 100
+                    width: tableView.contentItem.width / (tableView.columnCount +2)
                     title: "TIME"
                     role: "time"
                 }
 
                 QQ1.TableViewColumn {
                     id: column_4
-                    width: 100
                     title: "ALBUM"
                     role: "album"
                 }
@@ -528,7 +534,7 @@ ApplicationWindow {
         FileDialog {
             id: fileDialog
             folder: shortcuts.music
-            nameFilters: [ "*.mp3", "*.mp4" ]
+            nameFilters: [ "*.mp3", "*.mp4", "*.webm" ]
             selectMultiple: true
             onSelectionAccepted: {
 //                console.log(fileUrls)

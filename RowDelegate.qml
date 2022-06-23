@@ -36,11 +36,15 @@ ItemDelegate {
 //        gradient: styleData.row < tableView.rowCount ? setGradient() : null
         gradient: defaultGradient
 
-//        Timer {
-//            running: true
-//            repeat: true
-//            interval: 10
-//            onTriggered: backgroundRect.gradient = setGradient()
+//        Image {
+//            visible: true
+//            width: 20
+//            height: 20
+//            anchors.centerIn: parent
+//            anchors.left: parent.left
+//            verticalAlignment: Image.AlignVCenter
+//            horizontalAlignment: Image.AlignHCenter
+//            source: "sound.png"
 //        }
     }
 

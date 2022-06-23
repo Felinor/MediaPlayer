@@ -14,6 +14,7 @@ RESOURCES += \
     RowDelegate.qml \
     album-cover.jpg \
     music_note.png \
+    sound.png \
     imagine-assets/imagine-assets.qrc \
     icons/icons.qrc \
     qtquickcontrols2.conf \
@@ -38,7 +39,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     mediamodel.h    
 
-DISTFILES += \    
+DISTFILES += \
     album-cover.jpg \
     music_note.png
 
