@@ -184,7 +184,7 @@ ApplicationWindow {
                 id: tableView
                 clip: true
                 Layout.fillWidth: true
-                Layout.preferredHeight: parent.height / 2
+                Layout.fillHeight: true
                 alternatingRowColors: false
                 backgroundVisible: false
                 model: dataModel
@@ -231,98 +231,25 @@ ApplicationWindow {
                 }
             }
 
-//              List View
-                ListView {
-                    id: listView
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    model: dataModel
-                    spacing: 5
-                    clip: true                   
+//            Connections {
+//                target: dataModel
 
-                    highlight: Rectangle {
-                        color: "green"
-                    }
-                    highlightFollowsCurrentItem: true                    
+//                function onPlayerStateChanged(state) {
+//                    if (state === 1)
+//                        songNameLabel.text = "1515151511"
+//                    else
+//                        songNameLabel.text = ""
+//                }
+//            }
 
-//                    Connections {
-//                        target: dataModel
+//            Image {
+//                fillMode: Image.PreserveAspectCrop
+//                width: 50
+//                height: 50
+//                source: "album-cover.jpg"
+//                source: model.coverImage
+//            }
 
-//                        function onPlayerStateChanged(state) {
-//                            if (state === 1)
-//                                songNameLabel.text = "1515151511"
-//                            else
-//                                songNameLabel.text = ""
-//                        }
-//                    }
-
-                    delegate: Row {
-                        width: parent.width
-                        height: 50
-                        spacing: 5                     
-
-                        Image {
-//                            fillMode: Image.PreserveAspectCrop
-                            width: 50
-                            height: 50
-//                            source: "album-cover.jpg"
-                            source: model.coverImage
-                        }
-
-                        Rectangle {
-                            width: parent.width
-                            height: parent.height
-                            border.width: 1
-                            border.color: "red"
-                            color: "lightgray"
-
-//                            RoundButton {
-//                                icon.name: "favorite"
-//                                icon.width: 32
-//                                icon.height: 32
-//                            }                            
-
-                            Text {
-                                anchors.fill: parent
-                                text: model.artist
-//                                text: model.artist + " - " + model.title
-//                                Layout.alignment: Qt.AlignCenter
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    songNameLabel.text = model.artist
-                                    dataModel.setCurrentMedia(model.index)
-                                    ListView.currentIndex = model.index
-//                                    console.log(model.index, "Model Index")
-                                }
-                            }
-                        }                        
-                    }
-
-
-//                    delegate: Rectangle {
-//                        width: parent.width
-//                        height: 50
-//                        border.width: 1
-//                        border.color: "black"
-//                        color: "lightgray"
-//                        Text {
-//                            anchors.fill: parent
-//                            text: model.text
-//                            verticalAlignment: Text.AlignVCenter
-//                         }
-//                        MouseArea {
-//                            anchors.fill: parent
-//                            onClicked: {
-//                                songNameLabel.text = model.text
-//                                dataModel.play()
-//                            }
-//                        }
-//                    }
-                }                
 
 //                Connections {
 //                    target: dataModel
@@ -337,8 +264,6 @@ ApplicationWindow {
 //                        console.log("Connect Position = ", dataModel.position())
 //                    }
 //                }
-
-
 
                 Timer {
                     running: false
