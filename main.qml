@@ -6,6 +6,7 @@ import QtQuick.Layouts 1.15
 import QtQuick.Dialogs 1.3
 import MediaModel 1.0
 import QtQuick.Controls 1.4 as QQ1
+import QtQuick.Controls.Styles 1.4 as QQCS1
 
 ApplicationWindow {
     id: root
@@ -173,8 +174,6 @@ ApplicationWindow {
             Layout.margins: 20
             spacing: 10
 
-
-
 //                Image {
 //                    anchors.fill: parent
 //                    fillMode: Image.PreserveAspectCrop
@@ -186,8 +185,9 @@ ApplicationWindow {
                 clip: true
                 Layout.fillWidth: true
                 Layout.preferredHeight: parent.height / 2
+                alternatingRowColors: false
+                backgroundVisible: false
                 model: dataModel
-//                backgroundVisible: false
 
                 QQ1.TableViewColumn {
                     id: column_0
@@ -222,6 +222,12 @@ ApplicationWindow {
                     width: 100
                     title: "ALBUM"
                     role: "album"
+                }
+
+                style: QQCS1.TableViewStyle {
+                    headerDelegate: HeaderDelegate {}
+                    itemDelegate: DelegateItem {}
+                    rowDelegate: RowDelegate {}
                 }
             }
 

@@ -9,6 +9,9 @@ SOURCES += \
         mediamodel.cpp
 
 RESOURCES += \
+    DelegateItem.qml \
+    HeaderDelegate.qml \
+    RowDelegate.qml \
     album-cover.jpg \
     music_note.png \
     imagine-assets/imagine-assets.qrc \
@@ -35,7 +38,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     mediamodel.h    
 
-DISTFILES += \
+DISTFILES += \    
     album-cover.jpg \
     music_note.png
 
