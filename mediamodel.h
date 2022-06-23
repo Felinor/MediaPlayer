@@ -60,7 +60,7 @@ signals:
     void playerStateChanged(QMediaPlayer::State state);
 
 private:
-    void readMetadata(TagLib::FileRef &reference);
+    QVariantMap getMetadata(TagLib::FileRef &reference);
 
 private:
     QVariantList m_data;

@@ -51,13 +51,14 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
     connect(m_player, &QMediaPlayer::durationChanged,
             this, [&](qint64 dur) { qDebug() << "duration = " << dur; });
 
-//    TagLib::FileRef f("/home/felinor/Музыка/Demon_Hunter_-_Artificial_Light.mp3");
+    TagLib::FileRef f("/home/felinor/Музыка/Demon_Hunter_-_Artificial_Light.mp3");
 
 //    f.tag()->setAlbum("Extremist");
 //    f.tag()->setYear(2014);
+//    f.tag()->setGenre("Metal, Groove metal, Rock");
 //    f.save();
 
-//    readMetadata(f);
+//    getMetadata(f);
 
 //    TagLib::MPEG::File file("/home/felinor/Музыка/Demon_Hunter_-_Artificial_Light.mp3");
 //    TagLib::ByteVector handle = "TPE2";
@@ -169,29 +170,22 @@ void MediaModel::createPlaylist(QVariant playlist)
     foreach (const QUrl filename, list) {
         m_playlist->addMedia(filename);
 
-        QString mediaName = QFileInfo(filename.path()).fileName(); //baseName()
-
-//        QString path = filename.path();
-//        testMediaInfoLib(path.toStdString());
-//        qDebug() << filename.path();
-        qDebug() << filename.toString();
-
-//        QByteArray byteArray = QFileInfo(filename.path()).fileName().toLocal8Bit();
-//        char *name = byteArray.data();
-
-//        qDebug() << name << "NAME";
-
-//        testString = filename.toString();
-
-//        TagLib::FileRef f(QFile::encodeName(filename.toString()).constData());
+//        QString mediaName = QFileInfo(filename.path()).fileName(); //baseName()
 
         TagLib::FileRef f(filename.path().toStdString().c_str());
-        readMetadata(f);
+        getMetadata(f);
 
         QVariantMap map;
-        map.insert("artist", mediaName);
-        map.insert("title", "");
+        map.insert("artist", getMetadata(f).value("artist"));
+        map.insert("title", getMetadata(f).value("title"));
+        map.insert("time", getMetadata(f).value("length"));
+        map.insert("album", getMetadata(f).value("album"));
         add(map);
+
+//        QVariantMap map;
+//        map.insert("artist", mediaName);
+//        map.insert("title", "");
+//        add(map);
     }   
 
 //    testMediaInfoLib();
@@ -277,8 +271,18 @@ void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
     }
 }
 
-void MediaModel::readMetadata(TagLib::FileRef &reference)
+QVariantMap MediaModel::getMetadata(TagLib::FileRef &reference)
 {
+    QVariantMap metadata;
+
+    metadata.insert("title", QVariant::fromValue(TStringToQString(reference.tag()->title())));
+    metadata.insert("artist", QVariant::fromValue(TStringToQString(reference.tag()->artist())));
+    metadata.insert("album", QVariant::fromValue(TStringToQString(reference.tag()->album())));
+    metadata.insert("year", QVariant::fromValue(reference.tag()->year()));
+    metadata.insert("comment", QVariant::fromValue(TStringToQString(reference.tag()->comment())));
+    metadata.insert("track", QVariant::fromValue(reference.tag()->track()));
+    metadata.insert("genre", QVariant::fromValue(TStringToQString(reference.tag()->genre())));
+
     cout << "-- TAG (basic) --" << endl;
     cout << "title   - \"" << reference.tag()->title()   << "\"" << endl;
     cout << "artist  - \"" << reference.tag()->artist()  << "\"" << endl;
@@ -292,11 +296,21 @@ void MediaModel::readMetadata(TagLib::FileRef &reference)
     int seconds = properties->length() % 60;
     int minutes = (properties->length() - seconds) / 60;
 
+    metadata.insert("bitrate", QVariant::fromValue(properties->bitrate()));
+    metadata.insert("sample rate", QVariant::fromValue(properties->sampleRate()));
+    metadata.insert("channels", QVariant::fromValue(properties->channels()));
+//    metadata.insert("length", QVariant::fromValue(properties->length()));
+    metadata.insert("length", QVariant::fromValue(QString::number(minutes) + ":" + QString::number(seconds)));
+
     cout << "-- AUDIO --" << endl;
     cout << "bitrate     - " << properties->bitrate() << endl;
     cout << "sample rate - " << properties->sampleRate() << endl;
     cout << "channels    - " << properties->channels() << endl;
     cout << "length      - " << minutes << ":" << setfill('0') << setw(2) << seconds << endl;
+
+    qDebug() << metadata;
+
+    return metadata;
 }
 
 int MediaModel::duration() const

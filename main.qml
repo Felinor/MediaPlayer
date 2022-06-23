@@ -214,14 +214,14 @@ ApplicationWindow {
                     id: column_3
                     width: 100
                     title: "TIME"
-                    role: ""
+                    role: "time"
                 }
 
                 QQ1.TableViewColumn {
                     id: column_4
                     width: 100
                     title: "ALBUM"
-                    role: ""
+                    role: "album"
                 }
             }
 
