@@ -33,8 +33,8 @@ ItemDelegate {
         id: backgroundRect
 
         anchors.fill: delegateRow
-//        gradient: styleData.row < tableView.rowCount ? setGradient() : null
-        gradient: defaultGradient
+        gradient: styleData.row < tableView.rowCount ? setGradient() : null
+//        gradient: defaultGradient
 
 //        Image {
 //            visible: true

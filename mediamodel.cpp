@@ -51,10 +51,10 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
     connect(m_player, &QMediaPlayer::durationChanged,
             this, [&](qint64 dur) { qDebug() << "duration = " << dur; });
 
-    TagLib::FileRef f("/home/felinor/Музыка/Demon_Hunter_-_Artificial_Light.mp3");
+//    TagLib::FileRef f("/home/felinor/Музыка/Demon_Hunter_Bjrn_Speed_Strid_-_Collapsing_Feat_Bjorn_Speed_Strid.mp3");
 
-//    f.tag()->setAlbum("Extremist");
-//    f.tag()->setYear(2014);
+//    f.tag()->setAlbum("The World Is a Thorn");
+//    f.tag()->setYear(2010);
 //    f.tag()->setGenre("Metal, Groove metal, Rock");
 //    f.save();
 
