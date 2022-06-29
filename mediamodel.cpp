@@ -11,8 +11,6 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
-//#include "ZenLib/Ztring.h"
-//#include "MediaInfo.h"
 
 #include <taglib/tag.h>
 #include <taglib/tstring.h>
@@ -23,9 +21,6 @@
 
 //using namespace TagLib;
 using namespace std;
-
-//using namespace MediaInfoLib;
-//using namespace ZenLib;
 
 MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
 {

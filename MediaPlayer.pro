@@ -4,11 +4,14 @@ QT += quick multimedia widgets
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+LIBS += -ltag
+
 SOURCES += \
         main.cpp \
         mediamodel.cpp
 
 RESOURCES += \
+    CustomSlider.qml \
     DelegateItem.qml \
     HeaderDelegate.qml \
     RowDelegate.qml \
@@ -39,15 +42,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     mediamodel.h    
 
-DISTFILES += \
+DISTFILES += \    
     album-cover.jpg \
     music_note.png
-
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../MediaInfoLib/Project/CMake/release/ -lmediainfo
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../MediaInfoLib/Project/CMake/debug/ -lmediainfo
-else:unix: LIBS += -L$$PWD/../MediaInfoLib/Project/CMake/ -lmediainfo
-
-INCLUDEPATH += /home/felinor/felinor_workspace/MediaInfoLib/Source/MediaInfo
-DEPENDPATH += /home/felinor/felinor_workspace/MediaInfoLib/Source/MediaInfo
-
-unix:!macx: LIBS += -ltag

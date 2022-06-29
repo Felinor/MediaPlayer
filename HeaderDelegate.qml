@@ -17,7 +17,7 @@ ItemDelegate  {
         id: headerGradient
         GradientStop { position: 0; color: "#23B7B5" }
         GradientStop { position: 0.5; color: "#247489" }
-    }
+    }        
 
     height: textHeader.implicitHeight * 1.5
     clip: true

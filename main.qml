@@ -32,7 +32,7 @@ ApplicationWindow {
 //        radius: 20
 //        anchors.fill: parent
 //    }
-    background: Rectangle {
+    background: Rectangle { // @disable-check M16
 //        width: parent.width-20
 //        height: parent.height-20
 //        radius: 15
@@ -42,11 +42,11 @@ ApplicationWindow {
         }
     }
 
-    overlay.modal: Rectangle {
+    overlay.modal: Rectangle { // @disable-check M16
         color: "#8f28282a"
     }
 
-    overlay.modeless: Rectangle {
+    overlay.modeless: Rectangle { // @disable-check M16
         color: "#2f28282a"
     }        
 
@@ -406,46 +406,11 @@ ApplicationWindow {
                             }
                         }
 
-                Slider {
-                    id: seekSlider
-                    Layout.preferredWidth: parent.width / 2
-                    Layout.alignment: Qt.AlignCenter
-
-                    from: 0
-                    to: dataModel.duration
-                    value: dataModel.position
-                    onMoved: {
-                        console.log(value, "Position")
-//                        console.log(valueAt(position), "value")
-                        dataModel.setMediaPosition(valueAt(position))
-                    }
-
-//                    MouseArea {
-//                        anchors.fill: parent
-//                        hoverEnabled: true
-//                        onEntered: cursorShape = Qt.PointingHandCursor
-//                    }                    
-
-                    ToolTip {
-                        id: toolTip
-                        parent: seekSlider.handle
-                        visible: seekSlider.pressed
-                        text: pad(Math.floor(value / 60)) + ":" + pad(Math.floor(value % 60))
-                        y: parent.height
-//                        background: Item {
-//                            width: 80
-//                            height: 70
-//                        }
-
-                        readonly property int value: seekSlider.valueAt(seekSlider.position)
-
-                        function pad(number) {
-                            if (number <= 9)
-                                return "0" + number;
-                            return number;
+                        CustomSlider {
+                            id: seekSlider
+                            Layout.preferredWidth: parent.width / 2
+                            Layout.alignment: Qt.AlignCenter
                         }
-                    }
-                }
 
 //          Bottom panel
             RowLayout {
