@@ -73,8 +73,9 @@ ItemDelegate {
             if (mouse.button === Qt.LeftButton && styleData.row !== undefined) {
 //                console.log("Индекс делегата " + styleData.row)
 
-                songNameLabel.text = model.artist
+//                songLabelContainer.songLabel.text = model.artist
 //                dataModel.setCurrentMedia(model.index)
+                dataModel.pause()
                 dataModel.setCurrentMedia(styleData.row)
 
 //                delegateRow.height = heightRows + 5

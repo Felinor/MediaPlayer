@@ -48,37 +48,13 @@ ApplicationWindow {
 
     overlay.modeless: Rectangle { // @disable-check M16
         color: "#2f28282a"
-    }        
+    }
 
     property int itemAngle: 30
     property int itemSize: 150
     property string mediaStatus
 
-//    header: ToolBar {
-//        RowLayout {
-//            id: headerRowLayout
-//            anchors.fill: parent
-//            spacing: 0
-
-//            ToolButton {
-//                icon.name: "grid"
-//            }
-//            ToolButton {
-//                icon.name: "settings"
-//            }
-//            ToolButton {
-//                icon.name: "filter"
-//            }
-//            ToolButton {
-//                icon.name: "music"
-//            }
-
-//            Item {
-//                Layout.fillWidth: true
-//            }
-//        }
-//    }
-
+//    Left debug rect
 //    Rectangle {
 //        width: 50
 //        height: parent.height
@@ -90,67 +66,14 @@ ApplicationWindow {
 //        }
 
 //        Left panel
-        Column {
-//            anchors.fill: parent
-            width: 50
-            height: parent.height
-            anchors.left: parent.left
-            topPadding: 20
-            spacing: 30
+    LeftPanel {
+        width: 50
+        height: parent.height
+        anchors.left: parent.left
+        topPadding: 20
+        spacing: 30
+    }
 
-            RoundButton {
-                icon.name: "home"
-//                icon.width: 32
-//                icon.height: 32
-                Layout.preferredWidth: 32
-                Layout.preferredHeight: 32
-//                Layout.alignment: Qt.AlignHCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: console.log("will open home")
-            }
-            RoundButton {
-                icon.name: "favorite"
-                Layout.preferredWidth: 32
-                Layout.preferredHeight: 32
-                icon.width: 32
-                icon.height: 32
-//                Layout.alignment: Qt.AlignHCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: console.log("will open favorite")
-            }           
-            RoundButton {
-                icon.name: "music"
-                Layout.preferredWidth: 32
-                Layout.preferredHeight: 32
-//                Layout.alignment: Qt.AlignHCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: console.log("will open music")
-            }
-            RoundButton {
-                icon.name: "cloud"
-                Layout.preferredWidth: 32
-                Layout.preferredHeight: 32
-//                Layout.alignment: Qt.AlignHCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: console.log("will open cloud")
-            }
-            RoundButton {
-                icon.name: "settings"
-                Layout.preferredWidth: 32
-                Layout.preferredHeight: 32
-                Layout.alignment: Qt.AlignHCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: console.log("will open settings")
-            }
-            RoundButton {
-                icon.name: "equalizer"
-                Layout.preferredWidth: 32
-                Layout.preferredHeight: 32
-                Layout.alignment: Qt.AlignHCenter
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: console.log("will open equalizer")
-            }
-        }
 //    }
 
     MediaModel {
@@ -272,230 +195,37 @@ ApplicationWindow {
 //                    }
 //                }
 
-                Timer {
-                    running: false
-                    interval: 1000
-                    repeat: true
-                    onTriggered: console.log("Position =",dataModel.position())
+            Timer {
+                running: false
+                interval: 1000
+                repeat: true
+                onTriggered: console.log("Position =",dataModel.position())
 //                    onTriggered: console.log("Position =",dataModel.positionReady())
-                }
+            }
 
-//              Debug draw rect
-                Rectangle {
-                    Layout.fillWidth: true
-                    Layout.preferredHeight: parent.height / 5
-                    Layout.alignment: Qt.AlignBottom
-                    color: "plum"
-                    opacity: 0.8
+//          Debug draw rect
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.preferredHeight: parent.height / 5
+                Layout.alignment: Qt.AlignBottom
+                color: "plum"
+                opacity: 0.8
 
-                    ColumnLayout {
-                        width: parent.width
-                        height: parent.height
-//                        spacing: 25
+                ColumnLayout {
+                    width: parent.width
+                    height: parent.height
+//                    spacing: 25
 
-//                      songLabelContainer
-                        Rectangle {
-                            id: songLabelContainer
-                            clip: true
-                            border.color: "red"
-//                            border.width: 2
-
-//                            Layout.fillWidth: true
-                            Layout.preferredWidth: songNameLabel.width / 2
-                            Layout.preferredHeight: songNameLabel.implicitHeight
-                            Layout.alignment: Qt.AlignCenter
-                            Layout.topMargin: 10
-
-                            SequentialAnimation {
-                                id: songNameLabelAnimation
-                                running: true
-                                loops: Animation.Infinite
-
-                                PauseAnimation {
-                                    duration: 2000
-                                }
-                                ParallelAnimation {
-                                    XAnimator {
-                                        target: songNameLabel
-                                        from: 0
-                                        to: songLabelContainer.width - songNameLabel.implicitWidth
-                                        duration: 5000
-                                    }
-                                    OpacityAnimator {
-                                        target: leftGradient
-                                        from: 0
-                                        to: 1
-                                    }
-                                }
-                                OpacityAnimator {
-                                    target: rightGradient
-                                    from: 1
-                                    to: 0
-                                }
-                                PauseAnimation {
-                                    duration: 1000
-                                }
-                                OpacityAnimator {
-                                    target: rightGradient
-                                    from: 0
-                                    to: 1
-                                }
-                                ParallelAnimation {
-                                    XAnimator {
-                                        target: songNameLabel
-                                        from: songLabelContainer.width - songNameLabel.implicitWidth
-                                        to: 0
-                                        duration: 5000
-                                    }
-                                    OpacityAnimator {
-                                        target: leftGradient
-                                        from: 0
-                                        to: 1
-                                    }
-                                }
-                                OpacityAnimator {
-                                    target: leftGradient
-                                    from: 1
-                                    to: 0
-                                }
-                            }
-
-                            Rectangle {
-                                id: leftGradient
-                                gradient: Gradient {
-                                    GradientStop {
-                                        position: 0
-                                        color: "#dfe4ea"
-                                    }
-                                    GradientStop {
-                                        position: 1
-                                        color: "#00dfe4ea"
-                                    }
-                                }
-
-                                width: height
-                                height: parent.height
-                                anchors.left: parent.left
-                                z: 1
-                                rotation: -90
-                                opacity: 0
-                            }
-
-                            Label {
-                                id: songNameLabel
-                                onTextChanged: songNameLabelAnimation.restart()
-                                font.pixelSize: Qt.application.font.pixelSize * 1.4
-                            }
-
-                            Rectangle {
-                                id: rightGradient
-                                gradient: Gradient {
-                                    GradientStop {
-                                        position: 0
-                                        color: "#00dfe4ea"
-                                    }
-                                    GradientStop {
-                                        position: 1
-                                        color: "#dfe4ea"
-                                    }
-                                }
-
-                                width: height
-                                height: parent.height
-                                anchors.right: parent.right
-                                rotation: -90
-                            }
-                        }
-
-                        CustomSlider {
-                            id: seekSlider
-                            Layout.preferredWidth: parent.width / 2
-                            Layout.alignment: Qt.AlignCenter
-                        }
+                    CustomSlider {
+                        id: seekSlider
+                        Layout.preferredWidth: parent.width / 2
+                        Layout.alignment: Qt.AlignCenter
+                    }
 
 //          Bottom panel
-            RowLayout {
-                Layout.alignment: Qt.AlignCenter
-                Layout.bottomMargin: 10
-                spacing: 8
-
-                Connections {
-                    target: dataModel
-
-                    function onPlayerStateChanged(state) {
-                        console.log(state, "<-- State")
-                        mediaStatus = state
-                        if (state === 1)
-                            playButton.icon.name = "pause"
-                        else
-                            playButton.icon.name = "play"
-                    }
-                }
-
-                RoundButton {
-                    icon.name: "favorite"
-                    icon.width: 32
-                    icon.height: 32
-                    onClicked: console.log("will open favorite")
-                }
-//                RoundButton {
-//                    icon.name: "stop"
-//                    icon.width: 32
-//                    icon.height: 32
-//                    onClicked: dataModel.stop()
-//                }
-                RoundButton {
-                    icon.name: "shuffle"
-                    icon.width: 32
-                    icon.height: 32
-                    onClicked: dataModel.random()
-                }
-                RoundButton {
-                    icon.name: "previous"
-                    icon.width: 32
-                    icon.height: 32
-                    onClicked: dataModel.previous()
-                }
-                RoundButton {
-                    id: playButton
-                    icon.name: "play"
-                    icon.width: 32
-                    icon.height: 32
-                    onClicked: {
-                        icon.name == "play" ? dataModel.play() : dataModel.pause()
-                    }
-                }
-                RoundButton {
-                    icon.name: "next"
-                    icon.width: 32
-                    icon.height: 32
-                    onClicked: dataModel.next()
-                }
-                RoundButton {
-                    icon.name: "repeat"
-                    icon.width: 32
-                    icon.height: 32
-                    onClicked: dataModel.currentItemInLoop()
-                }                
-                RoundButton {
-                    icon.name: "add"
-                    icon.width: 32
-                    icon.height: 32
-                    onClicked: {
-                        fileDialog.open()
-                    }
-                }
-                RoundButton {
-                    icon.name: ""
-                    icon.width: 32
-                    icon.height: 32
-                    onClicked: {
-                        seekSlider.to = Math.random() *100
-                    }
+                    ControlPanel {}
                 }
             }
-        }
-        }
         }
 
         FileDialog {
