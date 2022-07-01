@@ -13,7 +13,11 @@ Item {
         Text {
             id: textRow
             width: parent.width
-            text: styleData.column === 0 ? styleData.row + 1 : styleData.value
+//            text: styleData.column === 0 ? styleData.row + 1 : styleData.value
+            text: styleData.column === 0 ? (mediaStatus === "1" && dataModel.getCurrentIndex() === styleData.row)
+                                         ? ""
+                                         : styleData.row + 1
+                                         : styleData.value
             elide: Text.ElideRight
             color: "white"
             font {

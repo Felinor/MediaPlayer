@@ -269,10 +269,10 @@ void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
 {   
 //    qDebug() << "STATUS" << status;
     if (status == QMediaPlayer::BufferedMedia) {
-        qDebug() << "AlbumArtist:" << m_player->metaData(QMediaMetaData::ContributingArtist).toString();
-        qDebug() << "Title:" << m_player->metaData(QMediaMetaData::Title).toString();
-        qDebug() << "Duration:" << m_player->metaData(QMediaMetaData::Duration).toInt();
-        qDebug() << "CoverArtImage:" << m_player->metaData(QMediaMetaData::CoverArtImage);
+//        qDebug() << "AlbumArtist:" << m_player->metaData(QMediaMetaData::ContributingArtist).toString();
+//        qDebug() << "Title:" << m_player->metaData(QMediaMetaData::Title).toString();
+//        qDebug() << "Duration:" << m_player->metaData(QMediaMetaData::Duration).toInt();
+//        qDebug() << "CoverArtImage:" << m_player->metaData(QMediaMetaData::CoverArtImage);
 //        getMetaData(m_player);
 
 //        QUrl imageUrl;
@@ -328,7 +328,7 @@ QVariantMap MediaModel::getMetadata(TagLib::FileRef &reference)
     cout << "channels    - " << properties->channels() << endl;
     cout << "length      - " << minutes << ":" << setfill('0') << setw(2) << seconds << endl;
 
-    qDebug() << metadata;
+//    qDebug() << metadata;
 
     return metadata;
 }

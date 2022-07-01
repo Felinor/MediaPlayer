@@ -48,18 +48,17 @@ ItemDelegate {
 
         anchors.fill: delegateRow
         gradient: styleData.row < tableView.rowCount ? setGradient() : null
-//        gradient: defaultGradient
 
-//        Image {
-//            visible: true
-//            width: 20
-//            height: 20
-//            anchors.centerIn: parent
-//            anchors.left: parent.left
-//            verticalAlignment: Image.AlignVCenter
-//            horizontalAlignment: Image.AlignHCenter
-//            source: "sound.png"
-//        }
+        Image {
+            visible: mediaStatus === "1" && dataModel.getCurrentIndex() === styleData.row
+            width: 25
+            height: 25
+            anchors.verticalCenter: parent.verticalCenter
+    //        anchors.horizontalCenter: parent.horizontalCenter
+            anchors.leftMargin: 15
+            fillMode: Image.PreserveAspectFit
+            source: "sound.png"
+        }
     }
 
     Behavior on height { PropertyAnimation { duration: 100 } }
