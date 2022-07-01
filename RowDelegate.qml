@@ -22,10 +22,24 @@ ItemDelegate {
         if (delegateRow.hovered)
             return currentRowGradient
 
+        if (mediaStatus === "1" && dataModel.getCurrentIndex() === styleData.row)
+            return currentRowGradient
+
+        if (tableView.selection.contains(styleData.row))
+            return currentRowGradient
+
         return defaultGradient
     }
 
-    height: delegateRow.hovered ? heightRows + 5 : heightRows
+//    Timer {
+//        running: true
+//        repeat: true
+//        interval: 500
+//        onTriggered: backgroundRect.gradient = setGradient()
+//    }
+
+//    height: delegateRow.hovered ? heightRows + 5 : heightRows
+    height: (mediaStatus === "1" && dataModel.getCurrentIndex() === styleData.row) ? heightRows + 5 : heightRows
     clip: true
     hoverEnabled: true
 
@@ -57,14 +71,20 @@ ItemDelegate {
         cursorShape: styleData.row === undefined ? Qt.ArrowCursor : Qt.PointingHandCursor
         onClicked: {
             if (mouse.button === Qt.LeftButton && styleData.row !== undefined) {
-//                console.log("Прокси индекс " + tableView.model.getIndex(styleData.row))
 //                console.log("Индекс делегата " + styleData.row)
-//                console.log(tableView.model.getIndex(styleData.row) === styleData.row)
-//                console.log(dataModel.count)
-//                console.log(tableView.model.get(styleData.row).keyRole)
 
                 songNameLabel.text = model.artist
-                dataModel.setCurrentMedia(model.index)
+//                dataModel.setCurrentMedia(model.index)
+                dataModel.setCurrentMedia(styleData.row)
+
+//                delegateRow.height = heightRows + 5
+//                backgroundRect.gradient = setGradient()
+//                console.log(mediaStatus, "<-- STATUS")
+                tableView.selection.clear()
+                tableView.selection.select(styleData.row)
+//                console.log(tableView.selection.count)
+                tableView.selection.forEach( function(rowIndex) {console.log(rowIndex)} )
+
             }
 
             else {

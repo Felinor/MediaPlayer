@@ -37,6 +37,9 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
     connect(m_player, &QMediaPlayer::mediaStatusChanged,
             this, &MediaModel::metaDataChanged);
 
+    connect(m_player, &QMediaPlayer::mediaStatusChanged,
+            this, &MediaModel::status);
+
     connect(m_player, &QMediaPlayer::positionChanged,
             this, [=]{ setPosition(m_player->position()/1000); });
 
@@ -123,7 +126,7 @@ void MediaModel::play()
 {            
     m_player->play();
     emit playerStateChanged(m_player->state());
-    qDebug() << m_player->position()/1000 << "<==========";
+    qDebug() << m_player->position()/1000 << "<-- Position";
 }
 
 void MediaModel::pause()
@@ -198,6 +201,28 @@ void MediaModel::setMediaPosition(int position)
 void MediaModel::setCurrentMedia(const int index)
 {
     m_playlist->setCurrentIndex(index);
+    qDebug() <<  m_playlist->currentMedia().request().url() << "<-- Current Media";
+}
+
+QMediaContent MediaModel::getCurrentMedia()
+{
+    return m_playlist->currentMedia();
+}
+
+QMediaPlayer* MediaModel::getPlayer()
+{
+    return m_player;
+}
+
+int MediaModel::getCurrentIndex()
+{
+    return m_playlist->currentIndex();
+}
+
+QMediaPlayer::MediaStatus MediaModel::status(QMediaPlayer::MediaStatus status)
+{
+    qDebug() << status << "<-- Status";
+    return status;
 }
 
 void MediaModel::getMetaData(QMediaPlayer *player)

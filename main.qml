@@ -52,6 +52,7 @@ ApplicationWindow {
 
     property int itemAngle: 30
     property int itemSize: 150
+    property string mediaStatus
 
 //    header: ToolBar {
 //        RowLayout {
@@ -422,7 +423,8 @@ ApplicationWindow {
                     target: dataModel
 
                     function onPlayerStateChanged(state) {
-                        console.log("State = " + state)
+                        console.log(state, "<-- State")
+                        mediaStatus = state
                         if (state === 1)
                             playButton.icon.name = "pause"
                         else

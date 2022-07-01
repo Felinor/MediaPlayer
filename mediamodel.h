@@ -42,6 +42,10 @@ public:
     Q_INVOKABLE void createPlaylist(QVariant playlist);
     Q_INVOKABLE void setMediaPosition(int position);
     Q_INVOKABLE void setCurrentMedia(const int index);
+    Q_INVOKABLE QMediaContent getCurrentMedia();
+    Q_INVOKABLE QMediaPlayer* getPlayer();
+    Q_INVOKABLE int getCurrentIndex();
+    Q_INVOKABLE QMediaPlayer::MediaStatus status(QMediaPlayer::MediaStatus status);
     void getMetaData(QMediaPlayer *player);
     QUrl getSourceImage(QImage image);
 
