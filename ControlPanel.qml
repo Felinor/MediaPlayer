@@ -42,7 +42,12 @@ RowLayout {
         icon.name: "previous"
         icon.width: 32
         icon.height: 32
-        onClicked: dataModel.previous()
+        onClicked: {
+            dataModel.previous()
+            tableView.selection.clear()
+            tableView.currentRow = currentMediaIndex
+            tableView.selection.select(currentMediaIndex)
+        }
     }
     RoundButton {
         id: playButton
@@ -57,7 +62,12 @@ RowLayout {
         icon.name: "next"
         icon.width: 32
         icon.height: 32
-        onClicked: dataModel.next()
+        onClicked: {
+            dataModel.next()
+            tableView.selection.clear()
+            tableView.currentRow = currentMediaIndex
+            tableView.selection.select(currentMediaIndex)
+        }
     }
     RoundButton {
         icon.name: "repeat"

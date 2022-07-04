@@ -5,12 +5,18 @@ Item {
     id: delegateItem
     clip: true
 
-    property int currentMediaIndex
-
     Item {
         id: container
         anchors.fill: parent
         anchors.margins: 15
+
+        Image {
+            visible: mediaStatus === "1" && currentMediaIndex === styleData.row && styleData.column === 0
+            width: 25
+            height: width
+            fillMode: Image.PreserveAspectFit
+            source: "sound.png"
+        }
 
         Text {
             id: textRow            

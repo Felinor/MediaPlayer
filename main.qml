@@ -50,6 +50,8 @@ ApplicationWindow {
     property int itemAngle: 30
     property int itemSize: 150
     property string mediaStatus
+    property int selectedRow
+    property int currentMediaIndex
 
 //    Left debug rect
 //    Rectangle {
