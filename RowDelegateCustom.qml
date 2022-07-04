@@ -18,28 +18,47 @@ ItemDelegate {
         GradientStop { position: 0.5; color: "#45607E" }
     }
 
+    property int currentMediaIndex
+
+    Connections {
+        target: dataModel
+
+        function onCurrentMediaChanged(position) {
+            currentMediaIndex = position
+        }
+    }
+
     function setGradient() {
+//        console.log(mediaStatus, "<-- MEDIA STATUS FUNC")
         if (delegateRow.hovered)
             return currentRowGradient
 
-        if (mediaStatus === "1" && dataModel.getCurrentIndex() === styleData.row)
-            return currentRowGradient
+//        if (mediaStatus === "1" && dataModel.getCurrentIndex() === styleData.row) {
+//            return currentRowGradient
+//        }
 
-        if (tableView.selection.contains(styleData.row))
+        if (mediaStatus === "1" && currentMediaIndex === styleData.row) {
             return currentRowGradient
+        }
+
+//        if (mediaStatus === "1")
+//            return defaultGradient
+
+//        if (tableView.selection.contains(styleData.row))
+//            return currentRowGradient
 
         return defaultGradient
     }
 
-//    Timer {
-//        running: true
-//        repeat: true
-//        interval: 500
-//        onTriggered: backgroundRect.gradient = setGradient()
-//    }
+    Timer {
+        running: true
+        repeat: true
+        interval: 500
+        onTriggered: setGradient()
+    }
 
 //    height: delegateRow.hovered ? heightRows + 5 : heightRows
-    height: (mediaStatus === "1" && dataModel.getCurrentIndex() === styleData.row) ? heightRows + 5 : heightRows
+    height: (mediaStatus === "1" && currentMediaIndex === styleData.row) ? heightRows + 5 : heightRows
     clip: true
     hoverEnabled: true
 
@@ -50,7 +69,7 @@ ItemDelegate {
         gradient: styleData.row < tableView.rowCount ? setGradient() : null
 
         Image {
-            visible: mediaStatus === "1" && dataModel.getCurrentIndex() === styleData.row
+            visible: mediaStatus === "1" && currentMediaIndex === styleData.row
             width: 25
             height: 25
             anchors.verticalCenter: parent.verticalCenter

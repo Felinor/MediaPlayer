@@ -5,16 +5,18 @@ Item {
     id: delegateItem
     clip: true
 
+    property int currentMediaIndex
+
     Item {
         id: container
         anchors.fill: parent
         anchors.margins: 15
 
         Text {
-            id: textRow
+            id: textRow            
             width: parent.width
 //            text: styleData.column === 0 ? styleData.row + 1 : styleData.value
-            text: styleData.column === 0 ? (mediaStatus === "1" && dataModel.getCurrentIndex() === styleData.row)
+            text: styleData.column === 0 ? (mediaStatus === "1" && currentMediaIndex === styleData.row)
                                          ? ""
                                          : styleData.row + 1
                                          : styleData.value
@@ -24,6 +26,14 @@ Item {
                 pointSize: delegateItem.height * 0.32
                 family: "Avenir Heavy"
                 wordSpacing: 1
+            }
+
+            Connections {
+                target: dataModel
+
+                function onCurrentMediaChanged(position) {
+                    currentMediaIndex = position
+                }
             }
 
 //            NumberAnimation on x {

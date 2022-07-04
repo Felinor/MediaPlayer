@@ -13,11 +13,12 @@ SOURCES += \
 RESOURCES += \
     ControlPanel.qml \
     CustomSlider.qml \
-    DelegateItem.qml \
-    HeaderDelegate.qml \
+    HeaderDelegateCustom.qml \
+    ItemDelegateCustom.qml \
     LeftPanel.qml \
-    RowDelegate.qml \
+    RowDelegateCustom.qml \
     SongLabel.qml \
+    TableViewQQ1.qml \
     album-cover.jpg \
     music_note.png \
     sound.png \
@@ -45,6 +46,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     mediamodel.h    
 
-DISTFILES += \
+DISTFILES += \    
     album-cover.jpg \
     music_note.png

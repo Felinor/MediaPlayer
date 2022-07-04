@@ -62,6 +62,7 @@ signals:
     void durationChanged();
     void positionChanged();
     void playerStateChanged(QMediaPlayer::State state);
+    void currentMediaChanged(int position);
 
 private:
     QVariantMap getMetadata(TagLib::FileRef &reference);
