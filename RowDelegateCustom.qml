@@ -70,12 +70,14 @@ ItemDelegate {
 //                songLabelContainer.songLabel.text = model.artist
 //                dataModel.setCurrentMedia(model.index)
 
-                dataModel.pause()
+                if (mediaStatus === "1" && currentMediaIndex === styleData.row) {
+                    dataModel.pause()
+                }
+                tableView.currentRow = styleData.row
                 dataModel.setCurrentMedia(styleData.row)
 
                 tableView.selection.clear()
                 tableView.selection.select(styleData.row)
-                tableView.currentRow = styleData.row
             }
         }        
     }
