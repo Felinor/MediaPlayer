@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Dialogs 1.3
-import QtQuick.Window 2.15
 import MediaModel 1.0
 
 ApplicationWindow {
@@ -49,9 +48,6 @@ ApplicationWindow {
 
     property int itemAngle: 30
     property int itemSize: 150
-    property string mediaStatus
-    property int selectedRow
-    property int currentMediaIndex
 
 //    Left debug rect
 //    Rectangle {
@@ -72,7 +68,6 @@ ApplicationWindow {
         height: parent.height
         anchors.left: parent.left
         topPadding: 20
-        spacing: 30
     }
 
 //    }
@@ -177,7 +172,10 @@ ApplicationWindow {
                     /*!
                         \brief Bottom panel
                     */
-                    ControlPanel {}
+                    ControlPanel {
+                        Layout.alignment: Qt.AlignCenter
+                        Layout.bottomMargin: 10
+                    }
                 }
             }
         }

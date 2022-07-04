@@ -1,8 +1,5 @@
 import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtGraphicalEffects 1.0
 import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
 
 Slider {
     id: seekSlider
@@ -12,7 +9,7 @@ Slider {
     value: dataModel.position
     onMoved: {
         console.log(value, "Position")
-//                        console.log(valueAt(position), "value")
+//        console.log(valueAt(position), "value")
         dataModel.setMediaPosition(valueAt(position))
     }
 

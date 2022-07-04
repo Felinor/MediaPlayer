@@ -1,10 +1,12 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.4
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 ItemDelegate {
     id: delegateRow
 
     property int heightRows: 50
+    property bool isCurrentMediaPlaying: dataModel.mediaPlayerState === 1
+                                         && dataModel.currentMediaIndex === styleData.row
 
     Gradient {
         id: defaultGradient
@@ -16,42 +18,20 @@ ItemDelegate {
         id: currentRowGradient
         GradientStop { position: 0; color: "#56789D" }
         GradientStop { position: 0.5; color: "#45607E" }
-    }  
-
-    Connections {
-        target: dataModel
-
-        function onCurrentMediaChanged(position) {
-            currentMediaIndex = position
-            tableView.currentRow = position
-        }
     }
 
     function setGradient() {
-        if (delegateRow.hovered)
-            return currentRowGradient
-
-        if (mediaStatus === "1" && currentMediaIndex === styleData.row) {
-            return currentRowGradient
-        }
-
-//        if (tableView.selection.contains(styleData.row))
-//            return currentRowGradient
-
-        if (styleData.selected)
+        if (delegateRow.hovered || styleData.selected
+                || (isCurrentMediaPlaying))
             return currentRowGradient
 
         return defaultGradient
     }
 
-//    height: delegateRow.hovered ? heightRows + 5 : heightRows
-    height: (mediaStatus === "1" && currentMediaIndex === styleData.row) ? heightRows + 5 : heightRows
-    clip: true
+    height: isCurrentMediaPlaying ? heightRows + 5 : heightRows
     hoverEnabled: true
 
     background: Rectangle {
-        id: backgroundRect
-
         anchors.fill: delegateRow
         gradient: styleData.row < tableView.rowCount ? setGradient() : null
     }
@@ -61,7 +41,7 @@ ItemDelegate {
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        acceptedButtons: Qt.LeftButton
         cursorShape: styleData.row === undefined ? Qt.ArrowCursor : Qt.PointingHandCursor
         onDoubleClicked: dataModel.play()
         onClicked: {
@@ -70,7 +50,7 @@ ItemDelegate {
 //                songLabelContainer.songLabel.text = model.artist
 //                dataModel.setCurrentMedia(model.index)
 
-                if (mediaStatus === "1" && currentMediaIndex === styleData.row) {
+                if (isCurrentMediaPlaying) {
                     dataModel.pause()
                 }
                 tableView.currentRow = styleData.row
@@ -79,7 +59,6 @@ ItemDelegate {
                 tableView.selection.clear()
                 tableView.selection.select(styleData.row)
             }
-        }        
+        }
     }
 }
-

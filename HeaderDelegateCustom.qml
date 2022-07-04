@@ -1,9 +1,7 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.4
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 ItemDelegate  {
-    id: control
-
     //    "#26B281"  красивый зеленый градиент  "#23B7B5" сине-зеленый градиент
     //    "#007D50"                             "#247489"
 
@@ -42,5 +40,3 @@ ItemDelegate  {
         }
     }
 }
-
-

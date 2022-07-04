@@ -2,50 +2,45 @@
 #define MEDIAMODEL_H
 
 #include <QAbstractListModel>
-#include <QStringList>
-#include <qqml.h>
 #include <QMediaPlaylist>
 #include <QMediaPlayer>
-
 #include <taglib/fileref.h>
 
 class MediaModel : public QAbstractListModel
 {
     Q_OBJECT
-    QML_ELEMENT
+
     Q_PROPERTY(int duration READ duration WRITE setDuration NOTIFY durationChanged)
     Q_PROPERTY(int position READ position WRITE setPosition NOTIFY positionChanged)
+    Q_PROPERTY(int currentMediaIndex READ currentMediaIndex WRITE setCurrentMediaIndex NOTIFY currentMediaIndexChanged)
+    Q_PROPERTY(QMediaPlayer::State mediaPlayerState READ mediaPlayerState WRITE setMediaPlayerState NOTIFY mediaPlayerStateChanged)
 
 public:
     MediaModel(QObject *parent = 0);
 
     enum Roles {
-        Artist = Qt::UserRole,
-        Title = Qt::UserRole + 2,
+        Album = Qt::UserRole,
+        Artist = Qt::UserRole + 2,
         CoverImage = Qt::UserRole + 3,
         Time = Qt::UserRole + 4,
-        Album = Qt::UserRole + 5
+        Title = Qt::UserRole + 5
     };
 
     virtual int rowCount(const QModelIndex &parent) const override;
     virtual QVariant data(const QModelIndex &index, int role) const override;
     virtual QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void add(QVariantMap data);
+    void add(QVariantMap &data);
     Q_INVOKABLE void play();
     Q_INVOKABLE void pause();
     Q_INVOKABLE void stop();
     Q_INVOKABLE void next();
     Q_INVOKABLE void previous();
     Q_INVOKABLE void random();
-    Q_INVOKABLE void currentItemInLoop();
+    Q_INVOKABLE void loopCurrentItem();
     Q_INVOKABLE void createPlaylist(QVariant playlist);
     Q_INVOKABLE void setMediaPosition(int position);
     Q_INVOKABLE void setCurrentMedia(const int index);
-    Q_INVOKABLE QMediaContent getCurrentMedia();
-    Q_INVOKABLE QMediaPlayer* getPlayer();
-    Q_INVOKABLE int getCurrentIndex();
-    Q_INVOKABLE QMediaPlayer::MediaStatus status(QMediaPlayer::MediaStatus status);
     void getMetaData(QMediaPlayer *player);
     QUrl getSourceImage(QImage image);
 
@@ -55,14 +50,20 @@ public:
     int position() const;
     void setPosition(int newPosition);
 
+    int currentMediaIndex() const;
+    void setCurrentMediaIndex(int newCurrentMediaIndex);
+
+    QMediaPlayer::State mediaPlayerState() const;
+    void setMediaPlayerState(QMediaPlayer::State newMediaPlayerState);
+
 public slots:
     void metaDataChanged(QMediaPlayer::MediaStatus status);   
 
 signals:
     void durationChanged();
     void positionChanged();
-    void playerStateChanged(QMediaPlayer::State state);
-    void currentMediaChanged(int position);
+    void currentMediaIndexChanged();
+    void mediaPlayerStateChanged();
 
 private:
     QVariantMap getMetadata(TagLib::FileRef &reference);
@@ -75,6 +76,8 @@ private:
     int m_position = 0;
 
     QString testString;
+    int m_currentMediaIndex;
+    QMediaPlayer::State m_mediaPlayerState;
 };
 
 #endif // MEDIAMODEL_H

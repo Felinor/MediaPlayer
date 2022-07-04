@@ -17,7 +17,7 @@ TableView {
 
     TableViewColumn {
         id: column_0
-        width: tableView.contentItem.width / (tableView.columnCount * 2)
+        width: tableView.contentItem.width / (tableView.columnCount * 2)        
         title: "#"
         role: ""
     }

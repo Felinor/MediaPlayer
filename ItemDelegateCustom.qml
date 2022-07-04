@@ -1,9 +1,11 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.4
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 Item {
     id: delegateItem
-    clip: true
+
+    property bool isCurrentMediaPlaying: dataModel.mediaPlayerState === 1
+                                         && dataModel.currentMediaIndex === styleData.row
 
     Item {
         id: container
@@ -11,7 +13,7 @@ Item {
         anchors.margins: 15
 
         Image {
-            visible: mediaStatus === "1" && currentMediaIndex === styleData.row && styleData.column === 0
+            visible: isCurrentMediaPlaying && styleData.column === 0
             width: 25
             height: width
             fillMode: Image.PreserveAspectFit
@@ -21,25 +23,13 @@ Item {
         Text {
             id: textRow            
             width: parent.width
-//            text: styleData.column === 0 ? styleData.row + 1 : styleData.value
-            text: styleData.column === 0 ? (mediaStatus === "1" && currentMediaIndex === styleData.row)
-                                         ? ""
-                                         : styleData.row + 1
-                                         : styleData.value
+            text: styleData.column === 0 ? (isCurrentMediaPlaying ? "" : styleData.row + 1) : styleData.value
             elide: Text.ElideRight
             color: "white"
             font {
                 pointSize: delegateItem.height * 0.32
                 family: "Avenir Heavy"
                 wordSpacing: 1
-            }
-
-            Connections {
-                target: dataModel
-
-                function onCurrentMediaChanged(position) {
-                    currentMediaIndex = position
-                }
             }
 
 //            NumberAnimation on x {
@@ -52,4 +42,3 @@ Item {
         }        
     }
 }
-

@@ -1,14 +1,11 @@
 #include "mediamodel.h"
-#include <QMediaPlaylist>
-#include <QMediaPlayer>
-#include <QDir>
 #include <QFileDialog>
-#include <QStandardPaths>
-#include <QMediaMetaData>
-#include <QMediaObject>
+//#include <QStandardPaths>
+//#include <QMediaMetaData>
+//#include <QMediaObject>
 #include <QBuffer>
+//#include <QDir>
 
-#include <string>
 #include <iostream>
 #include <iomanip>
 
@@ -24,27 +21,17 @@ using namespace std;
 
 MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
 {
-//    m_data.append("Demon Hunter Collapsing");
-//    m_data.append("P.O.D. Boom");
-//    m_data.append("Green Day Holidays");
-//    m_data.append("Jeremy Soul Dragonborne");
-//    m_data.append("Jeremy Soul Awake");
-//    m_data.append("Demon Hunter Death Flowers");
-
 //    connect(m_player, QOverload<>::of(&QMediaPlayer::metaDataChanged),
 //            this, &MediaModel::metaDataChanged);
 
     connect(m_player, &QMediaPlayer::mediaStatusChanged,
             this, &MediaModel::metaDataChanged);
 
+    connect(m_player, &QMediaPlayer::stateChanged,
+            this, &MediaModel::setMediaPlayerState);
+
     connect(m_playlist, &QMediaPlaylist::currentIndexChanged,
-            this, &MediaModel::currentMediaChanged);
-
-//    connect(m_player, &QMediaPlayer::currentMediaChanged,
-//            this, &MediaModel::currentMediaChanged);
-
-    connect(m_player, &QMediaPlayer::mediaStatusChanged,
-            this, &MediaModel::status);
+            this, &MediaModel::setCurrentMediaIndex);
 
     connect(m_player, &QMediaPlayer::positionChanged,
             this, [=]{ setPosition(m_player->position()/1000); });
@@ -117,13 +104,12 @@ QHash<int, QByteArray> MediaModel::roleNames() const
     return roles;
 }
 
-void MediaModel::add(QVariantMap data)
+void MediaModel::add(QVariantMap &data)
 {
     beginInsertRows(QModelIndex(), m_data.size(), m_data.size());
     m_data.append(data);
     endInsertRows();
 
-//    m_data[0] = QString("Size: %1").arg(m_data.size());
     QModelIndex index = createIndex(0, 0, static_cast<void *>(0));
     emit dataChanged(index, index);
 }
@@ -131,7 +117,6 @@ void MediaModel::add(QVariantMap data)
 void MediaModel::play()
 {            
     m_player->play();
-    emit playerStateChanged(m_player->state());
     qDebug() <<  m_playlist->currentMedia().request().url() << "<-- Current Media";
     qDebug() << m_player->position()/1000 << "<-- Position";
 }
@@ -139,13 +124,11 @@ void MediaModel::play()
 void MediaModel::pause()
 {
     m_player->pause();
-    emit playerStateChanged(m_player->state());
 }
 
 void MediaModel::stop()
 {
     m_player->stop();
-    emit playerStateChanged(m_player->state());
 }
 
 void MediaModel::next()
@@ -165,7 +148,7 @@ void MediaModel::random()
     m_playlist->setPlaybackMode(QMediaPlaylist::Random);
 }
 
-void MediaModel::currentItemInLoop()
+void MediaModel::loopCurrentItem()
 {
     m_playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
 }
@@ -211,28 +194,6 @@ void MediaModel::setCurrentMedia(const int index)
 {
     m_playlist->setCurrentIndex(index);
     qDebug() <<  m_playlist->currentMedia().request().url() << "<-- Current Media";
-}
-
-QMediaContent MediaModel::getCurrentMedia()
-{
-    return m_playlist->currentMedia();
-}
-
-QMediaPlayer* MediaModel::getPlayer()
-{
-    return m_player;
-}
-
-int MediaModel::getCurrentIndex()
-{
-    qDebug() << m_playlist->currentIndex() << "<-- Current index";
-    return m_playlist->currentIndex();
-}
-
-QMediaPlayer::MediaStatus MediaModel::status(QMediaPlayer::MediaStatus status)
-{
-    qDebug() << status << "<-- Status";
-    return status;
 }
 
 void MediaModel::getMetaData(QMediaPlayer *player)
@@ -367,4 +328,30 @@ void MediaModel::setPosition(int newPosition)
         return;
     m_position = newPosition;
     emit positionChanged();
+}
+
+int MediaModel::currentMediaIndex() const
+{
+    return m_currentMediaIndex;
+}
+
+void MediaModel::setCurrentMediaIndex(int newCurrentMediaIndex)
+{
+    if (m_currentMediaIndex == newCurrentMediaIndex)
+        return;
+    m_currentMediaIndex = newCurrentMediaIndex;
+    emit currentMediaIndexChanged();
+}
+
+QMediaPlayer::State MediaModel::mediaPlayerState() const
+{
+    return m_mediaPlayerState;
+}
+
+void MediaModel::setMediaPlayerState(QMediaPlayer::State newMediaPlayerState)
+{
+    if (m_mediaPlayerState == newMediaPlayerState)
+        return;
+    m_mediaPlayerState = newMediaPlayerState;
+    emit mediaPlayerStateChanged();
 }
