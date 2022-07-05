@@ -290,8 +290,9 @@ QVariantMap MediaModel::getMetadata(TagLib::FileRef &reference)
     metadata.insert("bitrate", QVariant::fromValue(properties->bitrate()));
     metadata.insert("sample rate", QVariant::fromValue(properties->sampleRate()));
     metadata.insert("channels", QVariant::fromValue(properties->channels()));
-//    metadata.insert("length", QVariant::fromValue(properties->length()));
-    metadata.insert("length", QVariant::fromValue(QString::number(minutes) + ":" + QString::number(seconds)));
+
+    QString length = seconds < 10 ? ("0" + QString::number(seconds)) : QString::number(seconds);
+    metadata.insert("length", QVariant::fromValue(QString::number(minutes) + ":" + length));
 
     cout << "-- AUDIO --" << endl;
     cout << "bitrate     - " << properties->bitrate() << endl;
@@ -300,7 +301,6 @@ QVariantMap MediaModel::getMetadata(TagLib::FileRef &reference)
     cout << "length      - " << minutes << ":" << setfill('0') << setw(2) << seconds << endl;
 
 //    qDebug() << metadata;
-
     return metadata;
 }
 

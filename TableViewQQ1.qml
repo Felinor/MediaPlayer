@@ -6,11 +6,12 @@ TableView {
     id: tableView
     clip: true
     alternatingRowColors: false
-    backgroundVisible: false
+    backgroundVisible: false    
 
     TableViewColumn {
         id: column_0
         width: tableView.viewport.width / (tableView.columnCount * 2)
+        movable: false
         title: "#"
         role: ""
     }
