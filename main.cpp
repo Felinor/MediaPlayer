@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
+    app.setWindowIcon(QIcon("appLogo.ico"));
 
     qmlRegisterType<MediaModel>("MediaModel", 1, 0, "MediaModel");
 

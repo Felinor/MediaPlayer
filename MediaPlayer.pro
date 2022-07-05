@@ -6,6 +6,9 @@ QT += quick multimedia widgets
 
 LIBS += -ltag
 
+ICON = appLogo.ico
+RC_ICONS = appLogo.ico
+
 SOURCES += \
         main.cpp \
         mediamodel.cpp
@@ -20,6 +23,7 @@ RESOURCES += \
     SongLabel.qml \
     TableViewQQ1.qml \
     album-cover.jpg \
+    logo.qrc \
     music_note.png \
     sound.png \
     imagine-assets/imagine-assets.qrc \
