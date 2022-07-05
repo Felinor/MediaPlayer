@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Dialogs 1.3
 import MediaModel 1.0
+import "helper.js" as Helper
 
 ApplicationWindow {
     id: root
@@ -86,7 +87,7 @@ ApplicationWindow {
         color: "#f4f4fe"
         border {
             color: "red"
-            width: 1
+            width: 3
         }
 
         ColumnLayout {
@@ -160,14 +161,47 @@ ApplicationWindow {
                 color: "plum"
                 opacity: 0.8
 
+                border {
+                    color: "green"
+                    width: 3
+                }
+
                 ColumnLayout {
                     width: parent.width
-                    height: parent.height
+                    height: parent.height                                        
 
-                    CustomSlider {
-                        id: seekSlider
-                        Layout.preferredWidth: parent.width / 2
+                    Rectangle {
                         Layout.alignment: Qt.AlignCenter
+                        Layout.preferredWidth: parent.width * 0.75
+                        Layout.preferredHeight: 50
+                        border {
+                            color: "yellow"
+                            width: 3
+                        }
+
+                        RowLayout {
+                            width: parent.width
+                            height: parent.height
+                            Label {
+                                Layout.alignment: Qt.AlignCenter
+                                Layout.leftMargin: 5
+                                font.pixelSize: 16
+                                text: Helper.prependZero(Math.floor(dataModel.position / 60)) + ":"
+                                      + Helper.prependZero(Math.floor(dataModel.position % 60))
+                            }
+                            CustomSlider {
+                                id: seekSlider
+                                Layout.preferredWidth: parent.width * 0.75
+                                Layout.alignment: Qt.AlignCenter
+                            }
+                            Label {
+                                Layout.alignment: Qt.AlignCenter
+                                Layout.rightMargin: 5
+                                font.pixelSize: 16
+                                text: Helper.prependZero(Math.floor(dataModel.duration / 60)) + ":"
+                                      + Helper.prependZero(Math.floor(dataModel.duration % 60))
+                            }
+                        }
                     }
                     /*!
                         \brief Bottom panel

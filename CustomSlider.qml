@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import "helper.js" as Helper
 
 Slider {
     id: seekSlider
@@ -17,15 +18,9 @@ Slider {
         id: toolTip
         parent: seekSlider.handle
         visible: seekSlider.pressed
-        text: pad(Math.floor(value / 60)) + ":" + pad(Math.floor(value % 60))
+        text: Helper.prependZero(Math.floor(value / 60)) + ":" + Helper.prependZero(Math.floor(value % 60))
         y: parent.height
 
         readonly property int value: seekSlider.valueAt(seekSlider.position)
-
-        function pad(number) {
-            if (number <= 9)
-                return "0" + number;
-            return number;
-        }
     }
 }

@@ -6,7 +6,9 @@ TableView {
     id: tableView
     clip: true
     alternatingRowColors: false
-    backgroundVisible: false    
+    backgroundVisible: false
+//    verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+//    horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
 
     TableViewColumn {
         id: column_0
@@ -48,5 +50,23 @@ TableView {
         headerDelegate: HeaderDelegateCustom {}
         itemDelegate: ItemDelegateCustom {}
         rowDelegate: RowDelegateCustom {}
+
+//        handle: Rectangle {
+//            implicitWidth: 14
+//            implicitHeight: 26
+//            Rectangle {
+//                color: "red"
+//                anchors.fill: parent
+//                anchors.topMargin: 6
+//                anchors.leftMargin: 4
+//                anchors.rightMargin: 4
+//                anchors.bottomMargin: 6
+//                radius: 5
+//            }
+//        }
+//        scrollBarBackground: Item {
+//            implicitWidth: 14
+//            implicitHeight: 26
+//        }
     }
 }

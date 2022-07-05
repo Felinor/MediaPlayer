@@ -17,6 +17,7 @@ RESOURCES += \
     ControlPanel.qml \
     CustomSlider.qml \
     HeaderDelegateCustom.qml \
+    helper.js \
     ItemDelegateCustom.qml \
     LeftPanel.qml \
     RowDelegateCustom.qml \
@@ -50,6 +51,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     mediamodel.h    
 
-DISTFILES += \    
+DISTFILES += \
     album-cover.jpg \
+    helper.js \
     music_note.png
