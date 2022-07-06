@@ -6,12 +6,12 @@ Slider {
     id: seekSlider
 
     from: 0
-    to: dataModel.duration
-    value: dataModel.position
+    to: dataModel.duration / 1000
+    value: dataModel.position / 1000
     onMoved: {
-        console.log(value, "Position")
+        console.log(value, "<-- Slider position")
 //        console.log(valueAt(position), "value")
-        dataModel.setMediaPosition(valueAt(position))
+        dataModel.setMediaPosition(valueAt(position*1000))
     }
 
     ToolTip {

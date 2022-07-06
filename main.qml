@@ -186,8 +186,8 @@ ApplicationWindow {
                                 Layout.alignment: Qt.AlignCenter
                                 Layout.leftMargin: 5
                                 font.pixelSize: 16
-                                text: Helper.prependZero(Math.floor(dataModel.position / 60)) + ":"
-                                      + Helper.prependZero(Math.floor(dataModel.position % 60))
+                                text: Helper.prependZero(Math.floor(dataModel.position / 1000 / 60)) + ":"
+                                      + Helper.prependZero(Math.floor(dataModel.position / 1000 % 60))
                             }
                             CustomSlider {
                                 id: seekSlider
@@ -198,8 +198,8 @@ ApplicationWindow {
                                 Layout.alignment: Qt.AlignCenter
                                 Layout.rightMargin: 5
                                 font.pixelSize: 16
-                                text: Helper.prependZero(Math.floor(dataModel.duration / 60)) + ":"
-                                      + Helper.prependZero(Math.floor(dataModel.duration % 60))
+                                text: Helper.prependZero(Math.floor(dataModel.duration / 1000 / 60)) + ":"
+                                      + Helper.prependZero(Math.floor(dataModel.duration / 1000 % 60))
                             }
                         }
                     }

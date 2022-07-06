@@ -32,7 +32,9 @@ RowLayout {
         icon.name: dataModel.mediaPlayerState === 1 ? "pause" : "play"
         icon.width: 32
         icon.height: 32
-        onClicked: {
+        onClicked: { tableView.selection.clear()
+            dataModel.mediaPlayerState === 1 ? tableView.selection.select(dataModel.currentMediaIndex)
+                                             : tableView.selection.clear()
             icon.name == "play" ? dataModel.play() : dataModel.pause()
         }
     }

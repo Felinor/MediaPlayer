@@ -33,11 +33,17 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
     connect(m_playlist, &QMediaPlaylist::currentIndexChanged,
             this, &MediaModel::setCurrentMediaIndex);
 
+//    connect(m_player, &QMediaPlayer::positionChanged,
+//            this, [=]{ setPosition(m_player->position()/1000); });
+
     connect(m_player, &QMediaPlayer::positionChanged,
-            this, [=]{ setPosition(m_player->position()/1000); });
+            this, &MediaModel::setPosition);
+
+//    connect(m_player, &QMediaPlayer::durationChanged,
+//            this, [=]{ setDuration(m_player->duration()/1000); });
 
     connect(m_player, &QMediaPlayer::durationChanged,
-            this, [=]{ setDuration(m_player->duration()/1000); });
+            this, &MediaModel::setDuration);
 
     connect(m_player, &QMediaPlayer::durationChanged,
             this, [&](qint64 dur) { qDebug() << "duration = " << dur; });
@@ -118,7 +124,7 @@ void MediaModel::play()
 {            
     m_player->play();
     qDebug() <<  m_playlist->currentMedia().request().url() << "<-- Current Media";
-    qDebug() << m_player->position()/1000 << "<-- Position";
+    qDebug() << m_player->position()/1000 << "<-- Current position";
 }
 
 void MediaModel::pause()
@@ -187,7 +193,7 @@ void MediaModel::createPlaylist(QVariant playlist)
 
 void MediaModel::setMediaPosition(int position)
 {
-    m_player->setPosition(position*1000);
+    m_player->setPosition(position);
 }
 
 void MediaModel::setCurrentMedia(const int index)
