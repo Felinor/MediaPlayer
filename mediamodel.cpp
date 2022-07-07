@@ -33,6 +33,9 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
     connect(m_playlist, &QMediaPlaylist::currentIndexChanged,
             this, &MediaModel::setCurrentMediaIndex);
 
+//    connect(m_playlist, &QMediaPlaylist::currentIndexChanged,
+//            this, [=]{ setDuration(m_player->duration()); });
+
 //    connect(m_player, &QMediaPlayer::positionChanged,
 //            this, [=]{ setPosition(m_player->position()/1000); });
 
@@ -46,7 +49,7 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
             this, &MediaModel::setDuration);
 
     connect(m_player, &QMediaPlayer::durationChanged,
-            this, [&](qint64 dur) { qDebug() << "duration = " << dur; });
+            this, [&](qint64 dur) { qDebug() << "duration changed = " << dur; });
 
 //    TagLib::FileRef f("/home/felinor/Музыка/Demon_Hunter_Bjrn_Speed_Strid_-_Collapsing_Feat_Bjorn_Speed_Strid.mp3");
 
@@ -200,6 +203,18 @@ void MediaModel::setCurrentMedia(const int index)
 {
     m_playlist->setCurrentIndex(index);
     qDebug() <<  m_playlist->currentMedia().request().url() << "<-- Current Media";
+}
+
+void MediaModel::applyVolume(int volumeSliderValue)
+{
+    // volumeSliderValue is in the range [0..100]
+
+    qreal linearVolume = QAudio::convertVolume(volumeSliderValue / qreal(100.0),
+                                               QAudio::LogarithmicVolumeScale,
+                                               QAudio::LinearVolumeScale);
+
+    m_player->setVolume(qRound(linearVolume * 100));
+    qDebug() << volumeSliderValue << "<-- Volume";
 }
 
 void MediaModel::getMetaData(QMediaPlayer *player)

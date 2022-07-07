@@ -46,5 +46,9 @@
         <file>mediaplayer/32x32@2/star.png</file>
         <file>mediaplayer/32x32/equalizer.png</file>
         <file>mediaplayer/32x32@2/equalizer.png</file>
+        <file>mediaplayer/32x32/volume.png</file>
+        <file>mediaplayer/32x32/mute.png</file>
+        <file>mediaplayer/32x32@2/volume.png</file>
+        <file>mediaplayer/32x32@2/mute.png</file>
     </qresource>
 </RCC>

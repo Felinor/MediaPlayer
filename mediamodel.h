@@ -41,6 +41,7 @@ public:
     Q_INVOKABLE void createPlaylist(QVariant playlist);
     Q_INVOKABLE void setMediaPosition(int position);
     Q_INVOKABLE void setCurrentMedia(const int index);
+    Q_INVOKABLE void applyVolume(int volumeSliderValue);
     void getMetaData(QMediaPlayer *player);
     QUrl getSourceImage(QImage image);
 

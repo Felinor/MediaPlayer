@@ -47,9 +47,6 @@ ApplicationWindow {
         color: "#2f28282a"
     }
 
-    property int itemAngle: 30
-    property int itemSize: 150
-
 //    Left debug rect
 //    Rectangle {
 //        width: 50
@@ -65,6 +62,7 @@ ApplicationWindow {
         \brief Left panel
     */
     LeftPanel {
+        id: leftPanel
         width: 50
         height: parent.height
         anchors.left: parent.left
@@ -81,7 +79,7 @@ ApplicationWindow {
     */
     Rectangle {
         height: parent.height
-        width: parent.width - 50
+        width: parent.width - leftPanel.width
         anchors.right: parent.right
 //        color: "skyblue"
         color: "#f4f4fe"
@@ -93,8 +91,8 @@ ApplicationWindow {
         ColumnLayout {
             width: parent.width
             height: parent.height
-            Layout.margins: 20
-            spacing: 10
+//            Layout.margins: 20
+//            spacing: 10
 
 //                Image {
 //                    anchors.fill: parent
@@ -168,8 +166,11 @@ ApplicationWindow {
 
                 ColumnLayout {
                     width: parent.width
-                    height: parent.height                                        
+                    height: parent.height
 
+                    /*!
+                        \brief Debug draw rect
+                    */
                     Rectangle {
                         Layout.alignment: Qt.AlignCenter
                         Layout.preferredWidth: parent.width * 0.75

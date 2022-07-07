@@ -30,7 +30,8 @@ RESOURCES += \
     imagine-assets/imagine-assets.qrc \
     icons/icons.qrc \
     qtquickcontrols2.conf \
-    main.qml
+    main.qml \
+    VolumeSlider.qml
 
 TRANSLATIONS += \
     MediaPlayer_ru_RU.ts
@@ -51,7 +52,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     mediamodel.h    
 
-DISTFILES += \
+DISTFILES += \    
     album-cover.jpg \
     helper.js \
     music_note.png

@@ -64,11 +64,24 @@ RowLayout {
         }
     }
     RoundButton {
+        icon.name: "volume"
+        icon.width: 32
+        icon.height: 32
+        onClicked: {
+            volumeSlider.visible = !volumeSlider.visible
+        }
+    }
+    VolumeSlider {
+        id: volumeSlider
+        visible: false
+    }
+    RoundButton {
+        visible: false
         icon.name: ""
         icon.width: 32
         icon.height: 32
         onClicked: {
             seekSlider.to = Math.random() *100
         }
-    }
+    }    
 }
