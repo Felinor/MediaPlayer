@@ -14,6 +14,7 @@ class MediaModel : public QAbstractListModel
     Q_PROPERTY(int position READ position WRITE setPosition NOTIFY positionChanged)
     Q_PROPERTY(int currentMediaIndex READ currentMediaIndex WRITE setCurrentMediaIndex NOTIFY currentMediaIndexChanged)
     Q_PROPERTY(QMediaPlayer::State mediaPlayerState READ mediaPlayerState WRITE setMediaPlayerState NOTIFY mediaPlayerStateChanged)
+    Q_PROPERTY(int volume READ volume WRITE setVolume NOTIFY volumeChanged)
 
 public:
     MediaModel(QObject *parent = 0);
@@ -42,6 +43,7 @@ public:
     Q_INVOKABLE void setMediaPosition(int position);
     Q_INVOKABLE void setCurrentMedia(const int index);
     Q_INVOKABLE void applyVolume(int volumeSliderValue);
+    Q_INVOKABLE void setMedia(QString url);
     void getMetaData(QMediaPlayer *player);
     QUrl getSourceImage(QImage image);
 
@@ -57,14 +59,19 @@ public:
     QMediaPlayer::State mediaPlayerState() const;
     void setMediaPlayerState(QMediaPlayer::State newMediaPlayerState);
 
+    int volume() const;
+    void setVolume(int newVolume);
+
 public slots:
-    void metaDataChanged(QMediaPlayer::MediaStatus status);   
+    void metaDataChanged(QMediaPlayer::MediaStatus status);
 
 signals:
     void durationChanged();
     void positionChanged();
     void currentMediaIndexChanged();
     void mediaPlayerStateChanged();
+
+    void volumeChanged();
 
 private:
     QVariantMap getMetadata(TagLib::FileRef &reference);
@@ -79,6 +86,7 @@ private:
     QString testString;
     int m_currentMediaIndex;
     QMediaPlayer::State m_mediaPlayerState;
+    int m_volume = 100;
 };
 
 #endif // MEDIAMODEL_H

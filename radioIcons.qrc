@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>radioIcons/autoRadio.png</file>
+        <file>radioIcons/comedyRadio.png</file>
+        <file>radioIcons/RussianRadio.png</file>
+    </qresource>
+</RCC>

@@ -30,6 +30,9 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
     connect(m_player, &QMediaPlayer::stateChanged,
             this, &MediaModel::setMediaPlayerState);
 
+    connect(m_player, &QMediaPlayer::volumeChanged,
+            this, &MediaModel::setVolume);
+
     connect(m_playlist, &QMediaPlaylist::currentIndexChanged,
             this, &MediaModel::setCurrentMediaIndex);
 
@@ -51,11 +54,13 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
     connect(m_player, &QMediaPlayer::durationChanged,
             this, [&](qint64 dur) { qDebug() << "duration changed = " << dur; });
 
-//    TagLib::FileRef f("/home/felinor/Музыка/Demon_Hunter_Bjrn_Speed_Strid_-_Collapsing_Feat_Bjorn_Speed_Strid.mp3");
+    TagLib::FileRef f("/home/felinor/Музыка/LiSA - Gurenge.mp3");
 
-//    f.tag()->setAlbum("The World Is a Thorn");
-//    f.tag()->setYear(2010);
-//    f.tag()->setGenre("Metal, Groove metal, Rock");
+//    f.tag()->setArtist("LiSA");
+//    f.tag()->setTitle("Gurenge");
+//    f.tag()->setAlbum("LiVE is Smile Always ～364+JOKER～ at YOKOHAMA ARENA");
+//    f.tag()->setYear(2020);
+//    f.tag()->setGenre("J-pop");
 //    f.save();
 
 //    getMetadata(f);
@@ -214,7 +219,16 @@ void MediaModel::applyVolume(int volumeSliderValue)
                                                QAudio::LinearVolumeScale);
 
     m_player->setVolume(qRound(linearVolume * 100));
-    qDebug() << volumeSliderValue << "<-- Volume";
+
+//    m_player->setVolume(volumeSliderValue);
+//    qDebug() << volumeSliderValue << "<-- Volume";
+    qDebug() << m_player->volume() << "<-- Volume";
+}
+
+void MediaModel::setMedia(QString url)
+{
+     m_player->setMedia(QUrl(url));
+     m_player->play();
 }
 
 void MediaModel::getMetaData(QMediaPlayer *player)
@@ -375,4 +389,17 @@ void MediaModel::setMediaPlayerState(QMediaPlayer::State newMediaPlayerState)
         return;
     m_mediaPlayerState = newMediaPlayerState;
     emit mediaPlayerStateChanged();
+}
+
+int MediaModel::volume() const
+{
+    return m_volume;
+}
+
+void MediaModel::setVolume(int newVolume)
+{
+    if (m_volume == newVolume)
+        return;
+    m_volume = newVolume;
+    emit volumeChanged();
 }

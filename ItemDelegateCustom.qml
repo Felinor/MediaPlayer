@@ -17,7 +17,8 @@ Item {
             width: 25
             height: width
             fillMode: Image.PreserveAspectFit
-            source: "sound.png"
+            source: dataModel.volume !== 0 ? "qrc:/icons/mediaplayer/32x32@2/volume.png"
+                                                : "qrc:/icons/mediaplayer/32x32@2/mute.png"
         }
 
         Text {

@@ -57,4 +57,16 @@ Column {
         anchors.horizontalCenter: parent.horizontalCenter
         onClicked: console.log("will open equalizer")
     }
+    RoundButton {
+        icon.name: "radio"
+        Layout.preferredWidth: 32
+        Layout.preferredHeight: 32
+        Layout.alignment: Qt.AlignHCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        onClicked: {
+            loader.active = !loader.active
+            loader.source = "RadioWindow.qml"
+            console.log("will open radio")
+        }
+    }
 }

@@ -67,7 +67,7 @@ ApplicationWindow {
         height: parent.height
         anchors.left: parent.left
         topPadding: 20
-    }
+    }    
 
 //    }
 
@@ -86,7 +86,7 @@ ApplicationWindow {
         border {
             color: "red"
             width: 3
-        }
+        }        
 
         ColumnLayout {
             width: parent.width
@@ -104,7 +104,15 @@ ApplicationWindow {
                 id: tableView
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                model: dataModel               
+                model: dataModel
+                visible: !loader.active
+            }
+
+            Loader {
+                id: loader
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                active: false
             }
 
 //            Connections {

@@ -14,19 +14,20 @@ SOURCES += \
         mediamodel.cpp
 
 RESOURCES += \
+    radioIcons.qrc \
     ControlPanel.qml \
     CustomSlider.qml \
     HeaderDelegateCustom.qml \
     helper.js \
     ItemDelegateCustom.qml \
-    LeftPanel.qml \
+    LeftPanel.qml \    
+    RadioWindow.qml \
     RowDelegateCustom.qml \
     SongLabel.qml \
     TableViewQQ1.qml \
     album-cover.jpg \
     logo.qrc \
     music_note.png \
-    sound.png \
     imagine-assets/imagine-assets.qrc \
     icons/icons.qrc \
     qtquickcontrols2.conf \
@@ -52,7 +53,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     mediamodel.h    
 
-DISTFILES += \    
+DISTFILES += \
     album-cover.jpg \
     helper.js \
     music_note.png

@@ -110,4 +110,8 @@
         <file>tooltip-background.9.png</file>
         <file>tooltip-background@2x.9.png</file>
     </qresource>
+    <qresource prefix="/">
+        <file>tooltip-background@2x.9_rot.png</file>
+        <file>tooltip-background.9_rot.png</file>
+    </qresource>
 </RCC>

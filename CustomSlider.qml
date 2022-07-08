@@ -8,10 +8,10 @@ Slider {
     from: 0
     to: dataModel.duration / 1000
     value: dataModel.position / 1000
+    snapMode: Slider.SnapOnRelease
     onMoved: {
-        console.log(value, "<-- Slider position")
-//        console.log(valueAt(position), "value")
         dataModel.setMediaPosition(valueAt(position*1000))
+        console.log(value, "<-- Slider position")
     }
 
     ToolTip {

@@ -64,7 +64,7 @@ RowLayout {
         }
     }
     RoundButton {
-        icon.name: "volume"
+        icon.name: dataModel.volume !== 0 ? "volume" : "mute"
         icon.width: 32
         icon.height: 32
         onClicked: {
