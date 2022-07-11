@@ -51,6 +51,15 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
     connect(m_player, &QMediaPlayer::durationChanged,
             this, &MediaModel::setDuration);
 
+    connect(m_radio, &QRadioTuner::frequencyChanged,
+            this, &MediaModel::playRadio);
+
+    connect(m_radio, &QRadioTuner::frequencyChanged,
+            this, &MediaModel::freqChanged);
+
+    connect(m_radio, &QRadioTuner::searchingChanged,
+            this, [&](bool searching) { qDebug() << "Searching = " << searching; });
+
     connect(m_player, &QMediaPlayer::durationChanged,
             this, [&](qint64 dur) { qDebug() << "duration changed = " << dur; });
 
@@ -231,6 +240,27 @@ void MediaModel::setMedia(QString url)
      m_player->play();
 }
 
+void MediaModel::playRadio(float freq)
+{
+    if (m_radio->isBandSupported(QRadioTuner::FM)) {
+        m_radio->setBand(QRadioTuner::FM);
+        m_radio->setFrequency(freq);
+        m_radio->setVolume(100);
+        m_radio->start();
+    }
+}
+
+void MediaModel::searchForward()
+{
+    m_radio->setFrequency(87);
+    m_radio->searchForward();
+}
+
+void MediaModel::searchBackward()
+{
+    m_radio->searchBackward();
+}
+
 void MediaModel::getMetaData(QMediaPlayer *player)
 {
        // Get the list of keys there is metadata available for
@@ -295,6 +325,14 @@ void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
 //        map.insert("coverImage", imageUrl);
 //        add(map);
     }
+}
+
+void MediaModel::freqChanged(int newFrequency)
+{
+    qDebug() << "new freq -->" << newFrequency;
+    if (m_radioStationFrequency == newFrequency)
+        return;
+    m_radioStationFrequency = newFrequency;
 }
 
 QVariantMap MediaModel::getMetadata(TagLib::FileRef &reference)

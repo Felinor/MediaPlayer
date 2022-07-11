@@ -55,7 +55,10 @@ Column {
         Layout.preferredHeight: 32
         Layout.alignment: Qt.AlignHCenter
         anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: console.log("will open equalizer")
+        onClicked: {
+            console.log("will open equalizer")
+            dataModel.playRadio()
+        }
     }
     RoundButton {
         icon.name: "radio"

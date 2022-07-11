@@ -4,6 +4,7 @@
 #include <QAbstractListModel>
 #include <QMediaPlaylist>
 #include <QMediaPlayer>
+#include <QRadioTuner>
 #include <taglib/fileref.h>
 
 class MediaModel : public QAbstractListModel
@@ -44,6 +45,9 @@ public:
     Q_INVOKABLE void setCurrentMedia(const int index);
     Q_INVOKABLE void applyVolume(int volumeSliderValue);
     Q_INVOKABLE void setMedia(QString url);
+    Q_INVOKABLE void playRadio(float freq);
+    Q_INVOKABLE void searchForward();
+    Q_INVOKABLE void searchBackward();
     void getMetaData(QMediaPlayer *player);
     QUrl getSourceImage(QImage image);
 
@@ -64,6 +68,7 @@ public:
 
 public slots:
     void metaDataChanged(QMediaPlayer::MediaStatus status);
+    void freqChanged(int newFrequency);
 
 signals:
     void durationChanged();
@@ -78,7 +83,7 @@ private:
 
 private:
     QVariantList m_data;
-    QMediaPlaylist *m_playlist = new QMediaPlaylist;    
+    QMediaPlaylist *m_playlist = new QMediaPlaylist(this);
     QMediaPlayer *m_player = new QMediaPlayer(this);
     int m_duration = 0;
     int m_position = 0;
@@ -87,6 +92,9 @@ private:
     int m_currentMediaIndex;
     QMediaPlayer::State m_mediaPlayerState;
     int m_volume = 100;
+
+    QRadioTuner *m_radio = new QRadioTuner(this);
+    float m_radioStationFrequency = 105.7;
 };
 
 #endif // MEDIAMODEL_H

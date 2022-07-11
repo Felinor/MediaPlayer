@@ -166,6 +166,7 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignBottom
                 color: "plum"
                 opacity: 0.8
+                visible: !loader.active
 
                 border {
                     color: "green"
