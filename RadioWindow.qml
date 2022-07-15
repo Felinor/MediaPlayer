@@ -104,8 +104,8 @@ Rectangle {
     GridView {
         id: gridView
 
-//        model: listModel
-        model: xmlModel
+        model: listModel
+//        model: xmlModel
         anchors.fill: parent
         cellWidth: 150
         cellHeight: 150

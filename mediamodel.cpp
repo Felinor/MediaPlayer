@@ -241,18 +241,14 @@ void MediaModel::playRadio(QString url)
 
     QFileInfo fi(url);
     QString ext = fi.suffix();  // ext = "gz"
-//    qDebug() << ext << " QFileInfo.suffix()";
+    qDebug() << ext << " QFileInfo.suffix()";
 
     if (!QUrl(url).isLocalFile() && (QFileInfo(url).suffix() == "m3u" || QFileInfo(url).suffix() == "m38u")) {
         m_manager->get(QNetworkRequest(QUrl(url)));
         return;
     }
 
-//    m_radioPlayer->setPlaylist(m_radioPlaylist);
-
-
 //    qDebug() << url;
-//    qDebug() << QMediaPlayer::hasSupport(url) << "Support";
     m_radioPlayer->setMedia(QMediaContent(url));
     m_radioPlayer->setVolume(100);
     m_radioPlayer->play();
@@ -260,40 +256,30 @@ void MediaModel::playRadio(QString url)
 
 void MediaModel::load(QNetworkReply *reply)
 {
-    qDebug() << "LOADED";
-    QByteArray arr = reply->readAll();
-//    reply->deleteLater();
-    QString str = arr;
-//    qDebug() << str << "<-- Ответ";
+    QByteArray answer = reply->readAll();
+    reply->deleteLater();
 
-    QTextStream in(&arr);
-    in.setCodec("UTF-8");
-    while (!in.atEnd())
+    QTextStream input(&answer);
+    input.setCodec("UTF-8");
+
+    while (!input.atEnd())
     {
-        QString line = in.readLine().trimmed().toUtf8().constData();
-//        qDebug() << line << "URL";
-       // Validity check
-       QRegExp regex("^(((http|ftp)(s?)\:\/\/)|(www\.))(([a-zA-Z0-9\-\.]+(\.[a-zA-Z0-9\-\.]+)+)|localhost)(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_])?([\d\w\.\/\%\+\-\=\&\?\:\\\"\'\,\|\~\;])$");
+        QString path = input.readLine().trimmed().toUtf8().constData();
+        // Validity check
+        QRegExp regexpr("^(((http|ftp)(s?)\:\/\/)|(www\.))(([a-zA-Z0-9\-\.]+(\.[a-zA-Z0-9\-\.]+)+)|localhost)(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_])?([\d\w\.\/\%\+\-\=\&\?\:\\\"\'\,\|\~\;])$");
 
-       if (!(line.front() == QString("#"))) {
-           regex.indexIn(line);
-           if(regex.cap(0).length() != 0 && QUrl(line).isValid()) {
-               //url passed validation test
-               m_radioPlaylist->addMedia(QUrl(QFileInfo(line).filePath()));
-               qDebug() << "Valid URL:" << line;
-           }
-       }
-
-//        if (QUrl(line).isValid()) {
-//            m_radioPlaylist->addMedia(QUrl(QFileInfo(line).filePath()));
-//            qDebug() << "Valid URL: " << line;
-//        }
+        if (!(path.front() == QString("#"))) {
+            regexpr.indexIn(path);
+            if (regexpr.cap(0).length() != 0 && QUrl(path).isValid()) {
+                //url passed validation test
+                m_radioPlaylist->addMedia(QUrl(path));
+                qDebug() << "URL is valid:" << path;
+            }
+        }
         else {
-//            Q_ASSERT("Invalid URL");
-            qDebug() << "Invalid URL:" << line;
+            qDebug() << "Invalid URL:" << path;
         }
     }
-
 
     m_radioPlayer->setPlaylist(m_radioPlaylist);
     m_radioPlayer->setVolume(100);
