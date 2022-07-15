@@ -7,12 +7,14 @@ import "helper.js" as Helper
 
 ApplicationWindow {
     id: root
-    width: 800
+    width: 810
     height: 600
     visible: true
     minimumHeight: 600
     minimumWidth: 800
     title: qsTr("Hello World")
+
+    onWidthChanged: console.log(width)
 //    flags: Qt.FramelessWindowHint
 //    color: "transparent"
 //    Rectangle {
@@ -227,7 +229,7 @@ ApplicationWindow {
         FileDialog {
             id: fileDialog
             folder: shortcuts.music
-            nameFilters: [ "*.mp3", "*.mp4", "*.webm" ]
+            nameFilters: [ "*.mp3", "*.mp4", "*.webm", "*.m3u" ]
             selectMultiple: true
             onSelectionAccepted: {
 //                console.log(fileUrls)

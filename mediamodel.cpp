@@ -5,9 +5,14 @@
 //#include <QMediaObject>
 #include <QBuffer>
 //#include <QDir>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QJsonDocument>
 
 #include <iostream>
 #include <iomanip>
+#include <QMimeDatabase>
 
 #include <taglib/tag.h>
 #include <taglib/tstring.h>
@@ -36,48 +41,31 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
     connect(m_playlist, &QMediaPlaylist::currentIndexChanged,
             this, &MediaModel::setCurrentMediaIndex);
 
-//    connect(m_playlist, &QMediaPlaylist::currentIndexChanged,
-//            this, [=]{ setDuration(m_player->duration()); });
-
-//    connect(m_player, &QMediaPlayer::positionChanged,
-//            this, [=]{ setPosition(m_player->position()/1000); });
-
     connect(m_player, &QMediaPlayer::positionChanged,
             this, &MediaModel::setPosition);
-
-//    connect(m_player, &QMediaPlayer::durationChanged,
-//            this, [=]{ setDuration(m_player->duration()/1000); });
 
     connect(m_player, &QMediaPlayer::durationChanged,
             this, &MediaModel::setDuration);
 
-    connect(m_radio, &QRadioTuner::frequencyChanged,
-            this, &MediaModel::playRadio);
-
-    connect(m_radio, &QRadioTuner::frequencyChanged,
-            this, &MediaModel::freqChanged);
-
-    connect(m_radio, &QRadioTuner::searchingChanged,
-            this, [&](bool searching) { qDebug() << "Searching = " << searching; });
-
     connect(m_player, &QMediaPlayer::durationChanged,
             this, [&](qint64 dur) { qDebug() << "duration changed = " << dur; });
 
-    TagLib::FileRef f("/home/felinor/Музыка/LiSA - Gurenge.mp3");
+    connect(m_radioPlayer, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error),
+        [=](QMediaPlayer::Error error){ qDebug() << error << "<-- Ошибка"; });
 
-//    f.tag()->setArtist("LiSA");
-//    f.tag()->setTitle("Gurenge");
-//    f.tag()->setAlbum("LiVE is Smile Always ～364+JOKER～ at YOKOHAMA ARENA");
-//    f.tag()->setYear(2020);
-//    f.tag()->setGenre("J-pop");
+    connect(m_manager, &QNetworkAccessManager::finished, this, &MediaModel::load);
+
+//    connect(m_radioPlaylist, &QMediaPlaylist::loaded, this, &MediaModel::load);
+
+//    TagLib::FileRef f("");
+//    f.tag()->setArtist("");
+//    f.tag()->setTitle("");
+//    f.tag()->setAlbum("");
+//    f.tag()->setYear();
+//    f.tag()->setGenre("");
 //    f.save();
 
 //    getMetadata(f);
-
-//    TagLib::MPEG::File file("/home/felinor/Музыка/Demon_Hunter_-_Artificial_Light.mp3");
-//    TagLib::ByteVector handle = "TPE2";
-//    TagLib::String value = "bar";
-//    TagLib::ID3v2::Tag *tag = file.ID3v2Tag(true);
 }
 
 int MediaModel::rowCount(const QModelIndex &parent) const
@@ -194,11 +182,6 @@ void MediaModel::createPlaylist(QVariant playlist)
         map.insert("time", getMetadata(f).value("length"));
         map.insert("album", getMetadata(f).value("album"));
         add(map);
-
-//        QVariantMap map;
-//        map.insert("artist", mediaName);
-//        map.insert("title", "");
-//        add(map);
     }   
 
 //    testMediaInfoLib();
@@ -234,31 +217,87 @@ void MediaModel::applyVolume(int volumeSliderValue)
     qDebug() << m_player->volume() << "<-- Volume";
 }
 
-void MediaModel::setMedia(QString url)
-{
-     m_player->setMedia(QUrl(url));
-     m_player->play();
-}
+void MediaModel::playRadio(QString url)
+{    
+//    QFile inputFile(url);
+//    if (inputFile.open(QIODevice::ReadOnly))
+//    {
+//        QTextStream in(&inputFile);
+//        in.setCodec("UTF-8");
+//        while (!in.atEnd())
+//        {
+//            QString line = in.readLine().trimmed().toUtf8().constData();
+//             qDebug() << QUrl(QFileInfo(line).filePath()) << "URL";
+//            m_radioPlaylist->addMedia(QUrl(QFileInfo(line).filePath()));
+//        }
+//        inputFile.close();
+//    }
 
-void MediaModel::playRadio(float freq)
-{
-    if (m_radio->isBandSupported(QRadioTuner::FM)) {
-        m_radio->setBand(QRadioTuner::FM);
-        m_radio->setFrequency(freq);
-        m_radio->setVolume(100);
-        m_radio->start();
+    QMimeDatabase db;
+    QMimeType mime = db.mimeTypeForFile(url, QMimeDatabase::MatchContent);
+//    qDebug() << mime.name() << "Name of the MIME type"; // Name of the MIME type ("audio/mpeg").
+//    qDebug() << mime.suffixes() << "Known suffixes for this MIME type"; // Known suffixes for this MIME type ("mp3", "mpga").
+//    qDebug() << mime.preferredSuffix() << "Preferred suffix for this MIME type"; // Preferred suffix for this MIME type ("mp3").
+
+    QFileInfo fi(url);
+    QString ext = fi.suffix();  // ext = "gz"
+//    qDebug() << ext << " QFileInfo.suffix()";
+
+    if (!QUrl(url).isLocalFile() && (QFileInfo(url).suffix() == "m3u" || QFileInfo(url).suffix() == "m38u")) {
+        m_manager->get(QNetworkRequest(QUrl(url)));
+        return;
     }
+
+//    m_radioPlayer->setPlaylist(m_radioPlaylist);
+
+
+//    qDebug() << url;
+//    qDebug() << QMediaPlayer::hasSupport(url) << "Support";
+    m_radioPlayer->setMedia(QMediaContent(url));
+    m_radioPlayer->setVolume(100);
+    m_radioPlayer->play();
 }
 
-void MediaModel::searchForward()
+void MediaModel::load(QNetworkReply *reply)
 {
-    m_radio->setFrequency(87);
-    m_radio->searchForward();
-}
+    qDebug() << "LOADED";
+    QByteArray arr = reply->readAll();
+//    reply->deleteLater();
+    QString str = arr;
+//    qDebug() << str << "<-- Ответ";
 
-void MediaModel::searchBackward()
-{
-    m_radio->searchBackward();
+    QTextStream in(&arr);
+    in.setCodec("UTF-8");
+    while (!in.atEnd())
+    {
+        QString line = in.readLine().trimmed().toUtf8().constData();
+//        qDebug() << line << "URL";
+       // Validity check
+       QRegExp regex("^(((http|ftp)(s?)\:\/\/)|(www\.))(([a-zA-Z0-9\-\.]+(\.[a-zA-Z0-9\-\.]+)+)|localhost)(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_])?([\d\w\.\/\%\+\-\=\&\?\:\\\"\'\,\|\~\;])$");
+
+       if (!(line.front() == QString("#"))) {
+           regex.indexIn(line);
+           if(regex.cap(0).length() != 0 && QUrl(line).isValid()) {
+               //url passed validation test
+               m_radioPlaylist->addMedia(QUrl(QFileInfo(line).filePath()));
+               qDebug() << "Valid URL:" << line;
+           }
+       }
+
+//        if (QUrl(line).isValid()) {
+//            m_radioPlaylist->addMedia(QUrl(QFileInfo(line).filePath()));
+//            qDebug() << "Valid URL: " << line;
+//        }
+        else {
+//            Q_ASSERT("Invalid URL");
+            qDebug() << "Invalid URL:" << line;
+        }
+    }
+
+
+    m_radioPlayer->setPlaylist(m_radioPlaylist);
+    m_radioPlayer->setVolume(100);
+    m_radioPlayer->play();
 }
 
 void MediaModel::getMetaData(QMediaPlayer *player)
@@ -325,14 +364,6 @@ void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
 //        map.insert("coverImage", imageUrl);
 //        add(map);
     }
-}
-
-void MediaModel::freqChanged(int newFrequency)
-{
-    qDebug() << "new freq -->" << newFrequency;
-    if (m_radioStationFrequency == newFrequency)
-        return;
-    m_radioStationFrequency = newFrequency;
 }
 
 QVariantMap MediaModel::getMetadata(TagLib::FileRef &reference)

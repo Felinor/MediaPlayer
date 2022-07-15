@@ -6,6 +6,7 @@
 #include <QMediaPlayer>
 #include <QRadioTuner>
 #include <taglib/fileref.h>
+#include <QNetworkReply>
 
 class MediaModel : public QAbstractListModel
 {
@@ -44,12 +45,9 @@ public:
     Q_INVOKABLE void setMediaPosition(int position);
     Q_INVOKABLE void setCurrentMedia(const int index);
     Q_INVOKABLE void applyVolume(int volumeSliderValue);
-    Q_INVOKABLE void setMedia(QString url);
-    Q_INVOKABLE void playRadio(float freq);
-    Q_INVOKABLE void searchForward();
-    Q_INVOKABLE void searchBackward();
+    Q_INVOKABLE void playRadio(QString url);
     void getMetaData(QMediaPlayer *player);
-    QUrl getSourceImage(QImage image);
+    QUrl getSourceImage(QImage image);    
 
     int duration() const;
     void setDuration(int newDuration);
@@ -68,7 +66,7 @@ public:
 
 public slots:
     void metaDataChanged(QMediaPlayer::MediaStatus status);
-    void freqChanged(int newFrequency);
+    void load(QNetworkReply *reply);
 
 signals:
     void durationChanged();
@@ -84,7 +82,9 @@ private:
 private:
     QVariantList m_data;
     QMediaPlaylist *m_playlist = new QMediaPlaylist(this);
+    QMediaPlaylist *m_radioPlaylist = new QMediaPlaylist(this);
     QMediaPlayer *m_player = new QMediaPlayer(this);
+    QMediaPlayer *m_radioPlayer = new QMediaPlayer(this, QMediaPlayer::StreamPlayback);
     int m_duration = 0;
     int m_position = 0;
 
@@ -93,8 +93,7 @@ private:
     QMediaPlayer::State m_mediaPlayerState;
     int m_volume = 100;
 
-    QRadioTuner *m_radio = new QRadioTuner(this);
-    float m_radioStationFrequency = 105.7;
+    QNetworkAccessManager *m_manager = new QNetworkAccessManager;
 };
 
 #endif // MEDIAMODEL_H
