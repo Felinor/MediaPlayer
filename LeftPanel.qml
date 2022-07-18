@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
+import QtQuick.Dialogs 1.3
 
 Column {
     spacing: 30
@@ -47,7 +48,16 @@ Column {
         Layout.preferredHeight: 32
         Layout.alignment: Qt.AlignHCenter
         anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: console.log("will open settings")
+        onClicked: {
+            console.log("will open settings")
+            loadDialog.open()
+        }
+        FileDialog {
+            id: loadDialog
+            folder: shortcuts.music
+            onAccepted: dataModel.loadPlaylist(fileUrl)
+
+        }
     }
     RoundButton {
         icon.name: "equalizer"
@@ -57,9 +67,16 @@ Column {
         anchors.horizontalCenter: parent.horizontalCenter
         onClicked: {
             console.log("will open equalizer")
-            dataModel.playRadio()
+            saveDialog.open()
         }
-    }
+        FileDialog {
+            id: saveDialog
+            folder: shortcuts.music
+            selectExisting: false
+            onAccepted: dataModel.savePlaylist(fileUrl)
+
+        }
+    }    
     RoundButton {
         icon.name: "radio"
         Layout.preferredWidth: 32

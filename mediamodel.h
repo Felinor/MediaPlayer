@@ -46,6 +46,8 @@ public:
     Q_INVOKABLE void setCurrentMedia(const int index);
     Q_INVOKABLE void applyVolume(int volumeSliderValue);
     Q_INVOKABLE void playRadio(QString url);
+    Q_INVOKABLE void savePlaylist(QVariant path);
+    Q_INVOKABLE void loadPlaylist(QVariant path);
     void getMetaData(QMediaPlayer *player);
     QUrl getSourceImage(QImage image);    
 

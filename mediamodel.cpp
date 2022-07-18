@@ -126,8 +126,18 @@ void MediaModel::add(QVariantMap &data)
 }
 
 void MediaModel::play()
-{            
+{
+    qDebug() << m_player->mediaStatus() << "Media status";
+
+//    if (m_player->mediaStatus() == QMediaPlayer::NoMedia) {
+//        qDebug() << "Give me somethink";
+//        return;
+//    }
+
+    m_player->setPlaylist(m_playlist);
+    m_playlist->setCurrentIndex(0);
     m_player->play();
+
     qDebug() <<  m_playlist->currentMedia().request().url() << "<-- Current Media";
     qDebug() << m_player->position()/1000 << "<-- Current position";
 }
@@ -166,6 +176,7 @@ void MediaModel::loopCurrentItem()
 
 void MediaModel::createPlaylist(QVariant playlist)
 {
+//    m_playlist->clear();
     QList<QUrl> list = qvariant_cast<QList<QUrl>>(playlist);
 
     foreach (const QUrl filename, list) {
@@ -185,10 +196,8 @@ void MediaModel::createPlaylist(QVariant playlist)
     }   
 
 //    testMediaInfoLib();
-
-    m_player->setPlaylist(m_playlist);
     m_playlist->setPlaybackMode(QMediaPlaylist::Loop);
-//    play();
+    m_player->setPlaylist(m_playlist);
 }
 
 void MediaModel::setMediaPosition(int position)
@@ -233,6 +242,14 @@ void MediaModel::playRadio(QString url)
 //        inputFile.close();
 //    }
 
+    // Reading
+//    QFile f("list.pl");
+//    if (f.open(QFile::ReadOnly)) {
+//      QDataStream s(&f);
+//      QString song;
+//      while (!s.atEnd()) { s >> song; }
+//    }
+
     QMimeDatabase db;
     QMimeType mime = db.mimeTypeForFile(url, QMimeDatabase::MatchContent);
 //    qDebug() << mime.name() << "Name of the MIME type"; // Name of the MIME type ("audio/mpeg").
@@ -252,6 +269,42 @@ void MediaModel::playRadio(QString url)
     m_radioPlayer->setMedia(QMediaContent(url));
     m_radioPlayer->setVolume(100);
     m_radioPlayer->play();
+}
+
+void MediaModel::savePlaylist(QVariant path)
+{
+    m_playlist->save(path.toUrl(), "m3u");
+}
+
+void MediaModel::loadPlaylist(QVariant path)
+{
+    qDebug() << path.toUrl() << "<-- Path";
+
+    QFile inputFile(QUrl(path.toString()).path());
+    if (inputFile.open(QIODevice::ReadOnly)) {
+        QTextStream in(&inputFile);
+        in.setCodec("UTF-8");
+        while (!in.atEnd()) {
+            QString line = in.readLine().toUtf8();
+
+    //        QString mediaName = QFileInfo(filename.path()).fileName(); //baseName()
+
+            TagLib::FileRef f(QUrl(line).path().toStdString().c_str());
+            getMetadata(f);
+
+            QVariantMap map;
+            map.insert("artist", getMetadata(f).value("artist"));
+            map.insert("title", getMetadata(f).value("title"));
+            map.insert("time", getMetadata(f).value("length"));
+            map.insert("album", getMetadata(f).value("album"));
+            add(map);
+            m_playlist->addMedia(QUrl(QFileInfo(line).filePath()));
+        }
+        inputFile.close();
+    }
+
+
+    qDebug() << m_playlist->mediaCount() << "Media count";
 }
 
 void MediaModel::load(QNetworkReply *reply)
