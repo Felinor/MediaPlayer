@@ -133,10 +133,7 @@ void MediaModel::play()
 //    if (m_player->mediaStatus() == QMediaPlayer::NoMedia) {
 //        qDebug() << "Give me somethink";
 //        return;
-//    }
-
-    m_player->setPlaylist(m_playlist);
-    m_playlist->setCurrentIndex(0);
+//    }    
     m_player->play();
 
     qDebug() <<  m_playlist->currentMedia().request().url() << "<-- Current Media";
@@ -259,6 +256,11 @@ void MediaModel::savePlaylist(const QVariant &path)
 
 void MediaModel::loadPlaylist(const QVariant &pathToPlaylist)
 {
+    if (!m_playlist->isEmpty()) {
+        m_playlist->clear();
+        clear();
+    }
+
     QFile inputFile(QUrl(pathToPlaylist.toString()).path());
     if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream input(&inputFile);
@@ -270,11 +272,20 @@ void MediaModel::loadPlaylist(const QVariant &pathToPlaylist)
         }
         inputFile.close();
     }
+    m_playlist->setCurrentIndex(0);
+    m_player->setPlaylist(m_playlist);
 }
 
 bool MediaModel::playListIsEmpty()
 {
     return m_playlist->isEmpty();
+}
+
+void MediaModel::removeRow(int index) {
+    beginResetModel();
+    m_playlist->removeMedia(index);
+    m_data.removeAt(index);
+    endResetModel();
 }
 
 void MediaModel::load(QNetworkReply *reply)
@@ -429,6 +440,13 @@ QVariantMap MediaModel::metaDataContainer(const char* pathToMediaFile)
     metaData.insert("album", getMetaData(f).value("album"));
 
     return metaData;
+}
+
+void MediaModel::clear()
+{
+    beginResetModel();
+    m_data.clear();
+    endResetModel();
 }
 
 int MediaModel::duration() const

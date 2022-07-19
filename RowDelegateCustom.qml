@@ -38,10 +38,21 @@ ItemDelegate {
 
     Behavior on height { PropertyAnimation { duration: 100 } }
 
+    Menu {
+//        id: hideMenu
+        visible: true
+        MenuItem {
+            text: "Удалить"
+            //                iconSource: "cart"
+            onTriggered: dataModel.removeRow(styleData.row)
+            visible: tableView.currentRow === -1 ? false : true
+        }
+    }
+
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
-        acceptedButtons: Qt.LeftButton
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         cursorShape: styleData.row === undefined ? Qt.ArrowCursor : Qt.PointingHandCursor
         onDoubleClicked: dataModel.play()
         onClicked: {
@@ -58,6 +69,17 @@ ItemDelegate {
 
                 tableView.selection.clear()
                 tableView.selection.select(styleData.row)
+            }
+            else if (mouse.button === Qt.RightButton && styleData.row !== undefined) {
+                console.log("CLICKED")
+                hideMenu.popup()
+            }
+        }
+        Menu {
+            id: hideMenu
+            MenuItem {
+                text: "Удалить"
+                onTriggered: dataModel.removeRow(styleData.row)
             }
         }
     }

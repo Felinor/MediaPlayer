@@ -69,8 +69,7 @@ ApplicationWindow {
         height: parent.height
         anchors.left: parent.left
         topPadding: 20
-    }    
-
+    }
 //    }
 
     MediaModel {
@@ -107,8 +106,8 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 model: dataModel
-                visible: !loader.active
-            }
+                visible: !loader.active                
+            }            
 
             Loader {
                 id: loader

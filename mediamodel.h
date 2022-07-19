@@ -49,6 +49,7 @@ public:
     Q_INVOKABLE void savePlaylist(const QVariant &path);
     Q_INVOKABLE void loadPlaylist(const QVariant &pathToPlaylist);
     Q_INVOKABLE bool playListIsEmpty();
+    Q_INVOKABLE void removeRow(int index);
     void getMetaData(QMediaPlayer *player);
     QUrl getSourceImage(QImage image);    
 
@@ -82,6 +83,7 @@ signals:
 private:
     QVariantMap getMetaData(TagLib::FileRef &reference);
     QVariantMap metaDataContainer(const char* pathToMediaFile);
+    void clear();
 
 private:
     QVariantList m_data;
