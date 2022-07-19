@@ -7,7 +7,7 @@ Column {
     spacing: 30
 
     RoundButton {
-        icon.name: "home"
+        icon.name: "equalizer"
 //        icon.width: 32
 //        icon.height: 32
         Layout.preferredWidth: 32
@@ -35,7 +35,7 @@ Column {
         onClicked: console.log("will open music")
     }
     RoundButton {
-        icon.name: "cloud"
+        icon.name: "settings"
         Layout.preferredWidth: 32
         Layout.preferredHeight: 32
 //        Layout.alignment: Qt.AlignHCenter
@@ -43,15 +43,12 @@ Column {
         onClicked: console.log("will open cloud")
     }
     RoundButton {
-        icon.name: "settings"
+        icon.name: "loadPlaylist"
         Layout.preferredWidth: 32
         Layout.preferredHeight: 32
         Layout.alignment: Qt.AlignHCenter
         anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: {
-            console.log("will open settings")
-            loadDialog.open()
-        }
+        onClicked: loadDialog.open()
         FileDialog {
             id: loadDialog
             folder: shortcuts.music
@@ -60,15 +57,12 @@ Column {
         }
     }
     RoundButton {
-        icon.name: "equalizer"
+        icon.name: "savePlaylist"
         Layout.preferredWidth: 32
         Layout.preferredHeight: 32
         Layout.alignment: Qt.AlignHCenter
         anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: {
-            console.log("will open equalizer")
-            saveDialog.open()
-        }
+        onClicked: !dataModel.playListIsEmpty() ? saveDialog.open() : messageDialog.open()
         FileDialog {
             id: saveDialog
             folder: shortcuts.music
@@ -76,9 +70,14 @@ Column {
             onAccepted: dataModel.savePlaylist(fileUrl)
 
         }
+        MessageDialog {
+            id: messageDialog
+            title: "Playlist is empty"
+            text: "Add something to the playlist. \n (* ^ ω ^)"
+        }
     }    
     RoundButton {
-        icon.name: "radio"
+        icon.name: loader.active ? "music" : "radio"
         Layout.preferredWidth: 32
         Layout.preferredHeight: 32
         Layout.alignment: Qt.AlignHCenter

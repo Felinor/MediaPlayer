@@ -33,7 +33,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role) const override;
     virtual QHash<int, QByteArray> roleNames() const override;
 
-    void add(QVariantMap &data);
+    void add(QVariantMap data);
     Q_INVOKABLE void play();
     Q_INVOKABLE void pause();
     Q_INVOKABLE void stop();
@@ -46,8 +46,9 @@ public:
     Q_INVOKABLE void setCurrentMedia(const int index);
     Q_INVOKABLE void applyVolume(int volumeSliderValue);
     Q_INVOKABLE void playRadio(QString url);
-    Q_INVOKABLE void savePlaylist(QVariant path);
-    Q_INVOKABLE void loadPlaylist(QVariant path);
+    Q_INVOKABLE void savePlaylist(const QVariant &path);
+    Q_INVOKABLE void loadPlaylist(const QVariant &pathToPlaylist);
+    Q_INVOKABLE bool playListIsEmpty();
     void getMetaData(QMediaPlayer *player);
     QUrl getSourceImage(QImage image);    
 
@@ -79,7 +80,8 @@ signals:
     void volumeChanged();
 
 private:
-    QVariantMap getMetadata(TagLib::FileRef &reference);
+    QVariantMap getMetaData(TagLib::FileRef &reference);
+    QVariantMap metaDataContainer(const char* pathToMediaFile);
 
 private:
     QVariantList m_data;

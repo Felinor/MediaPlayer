@@ -9,6 +9,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QJsonDocument>
+#include <QMessageBox>
 
 #include <iostream>
 #include <iomanip>
@@ -65,7 +66,7 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
 //    f.tag()->setGenre("");
 //    f.save();
 
-//    getMetadata(f);
+//    getMetaData(f);
 }
 
 int MediaModel::rowCount(const QModelIndex &parent) const
@@ -115,7 +116,7 @@ QHash<int, QByteArray> MediaModel::roleNames() const
     return roles;
 }
 
-void MediaModel::add(QVariantMap &data)
+void MediaModel::add(QVariantMap data)
 {
     beginInsertRows(QModelIndex(), m_data.size(), m_data.size());
     m_data.append(data);
@@ -185,13 +186,13 @@ void MediaModel::createPlaylist(QVariant playlist)
 //        QString mediaName = QFileInfo(filename.path()).fileName(); //baseName()
 
         TagLib::FileRef f(filename.path().toStdString().c_str());
-        getMetadata(f);
+        getMetaData(f);
 
         QVariantMap map;
-        map.insert("artist", getMetadata(f).value("artist"));
-        map.insert("title", getMetadata(f).value("title"));
-        map.insert("time", getMetadata(f).value("length"));
-        map.insert("album", getMetadata(f).value("album"));
+        map.insert("artist", getMetaData(f).value("artist"));
+        map.insert("title", getMetaData(f).value("title"));
+        map.insert("time", getMetaData(f).value("length"));
+        map.insert("album", getMetaData(f).value("album"));
         add(map);
     }   
 
@@ -228,28 +229,6 @@ void MediaModel::applyVolume(int volumeSliderValue)
 
 void MediaModel::playRadio(QString url)
 {    
-//    QFile inputFile(url);
-//    if (inputFile.open(QIODevice::ReadOnly))
-//    {
-//        QTextStream in(&inputFile);
-//        in.setCodec("UTF-8");
-//        while (!in.atEnd())
-//        {
-//            QString line = in.readLine().trimmed().toUtf8().constData();
-//             qDebug() << QUrl(QFileInfo(line).filePath()) << "URL";
-//            m_radioPlaylist->addMedia(QUrl(QFileInfo(line).filePath()));
-//        }
-//        inputFile.close();
-//    }
-
-    // Reading
-//    QFile f("list.pl");
-//    if (f.open(QFile::ReadOnly)) {
-//      QDataStream s(&f);
-//      QString song;
-//      while (!s.atEnd()) { s >> song; }
-//    }
-
     QMimeDatabase db;
     QMimeType mime = db.mimeTypeForFile(url, QMimeDatabase::MatchContent);
 //    qDebug() << mime.name() << "Name of the MIME type"; // Name of the MIME type ("audio/mpeg").
@@ -271,40 +250,31 @@ void MediaModel::playRadio(QString url)
     m_radioPlayer->play();
 }
 
-void MediaModel::savePlaylist(QVariant path)
+void MediaModel::savePlaylist(const QVariant &path)
 {
-    m_playlist->save(path.toUrl(), "m3u");
+    if (!m_playlist->isEmpty()) {
+        m_playlist->save(path.toUrl(), "m3u");
+    }
 }
 
-void MediaModel::loadPlaylist(QVariant path)
+void MediaModel::loadPlaylist(const QVariant &pathToPlaylist)
 {
-    qDebug() << path.toUrl() << "<-- Path";
-
-    QFile inputFile(QUrl(path.toString()).path());
-    if (inputFile.open(QIODevice::ReadOnly)) {
-        QTextStream in(&inputFile);
-        in.setCodec("UTF-8");
-        while (!in.atEnd()) {
-            QString line = in.readLine().toUtf8();
-
-    //        QString mediaName = QFileInfo(filename.path()).fileName(); //baseName()
-
-            TagLib::FileRef f(QUrl(line).path().toStdString().c_str());
-            getMetadata(f);
-
-            QVariantMap map;
-            map.insert("artist", getMetadata(f).value("artist"));
-            map.insert("title", getMetadata(f).value("title"));
-            map.insert("time", getMetadata(f).value("length"));
-            map.insert("album", getMetadata(f).value("album"));
-            add(map);
-            m_playlist->addMedia(QUrl(QFileInfo(line).filePath()));
+    QFile inputFile(QUrl(pathToPlaylist.toString()).path());
+    if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QTextStream input(&inputFile);
+        input.setCodec("UTF-8");
+        while (!input.atEnd()) {
+            QString pathToMediaFile = input.readLine().toUtf8();
+            add(metaDataContainer(QUrl(pathToMediaFile).path().toStdString().c_str()));
+            m_playlist->addMedia(QUrl(QFileInfo(pathToMediaFile).filePath()));
         }
         inputFile.close();
     }
+}
 
-
-    qDebug() << m_playlist->mediaCount() << "Media count";
+bool MediaModel::playListIsEmpty()
+{
+    return m_playlist->isEmpty();
 }
 
 void MediaModel::load(QNetworkReply *reply)
@@ -317,20 +287,20 @@ void MediaModel::load(QNetworkReply *reply)
 
     while (!input.atEnd())
     {
-        QString path = input.readLine().trimmed().toUtf8().constData();
+        QString urlPath = input.readLine().toUtf8();
         // Validity check
         QRegExp regexpr("^(((http|ftp)(s?)\:\/\/)|(www\.))(([a-zA-Z0-9\-\.]+(\.[a-zA-Z0-9\-\.]+)+)|localhost)(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_])?([\d\w\.\/\%\+\-\=\&\?\:\\\"\'\,\|\~\;])$");
 
-        if (!(path.front() == QString("#"))) {
-            regexpr.indexIn(path);
-            if (regexpr.cap(0).length() != 0 && QUrl(path).isValid()) {
+        if (!(urlPath.front() == QString("#"))) {
+            regexpr.indexIn(urlPath);
+            if (regexpr.cap(0).length() != 0 && QUrl(urlPath).isValid()) {
                 //url passed validation test
-                m_radioPlaylist->addMedia(QUrl(path));
-                qDebug() << "URL is valid:" << path;
+                m_radioPlaylist->addMedia(QUrl(urlPath));
+                qDebug() << "URL is valid:" << urlPath;
             }
         }
         else {
-            qDebug() << "Invalid URL:" << path;
+            qDebug() << "Invalid URL:" << urlPath;
         }
     }
 
@@ -405,7 +375,7 @@ void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
     }
 }
 
-QVariantMap MediaModel::getMetadata(TagLib::FileRef &reference)
+QVariantMap MediaModel::getMetaData(TagLib::FileRef &reference)
 {
     QVariantMap metadata;
 
@@ -445,6 +415,20 @@ QVariantMap MediaModel::getMetadata(TagLib::FileRef &reference)
 
 //    qDebug() << metadata;
     return metadata;
+}
+
+QVariantMap MediaModel::metaDataContainer(const char* pathToMediaFile)
+{
+    TagLib::FileRef f(pathToMediaFile);
+    getMetaData(f);
+
+    QVariantMap metaData;
+    metaData.insert("artist", getMetaData(f).value("artist"));
+    metaData.insert("title", getMetaData(f).value("title"));
+    metaData.insert("time", getMetaData(f).value("length"));
+    metaData.insert("album", getMetaData(f).value("album"));
+
+    return metaData;
 }
 
 int MediaModel::duration() const
