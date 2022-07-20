@@ -107,7 +107,7 @@ ApplicationWindow {
                 Layout.fillHeight: true
                 model: dataModel
                 visible: !loader.active                
-            }            
+            }
 
             Loader {
                 id: loader
@@ -228,7 +228,7 @@ ApplicationWindow {
         FileDialog {
             id: fileDialog
             folder: shortcuts.music
-            nameFilters: [ "*.mp3", "*.mp4", "*.webm", "*.m3u" ]
+            nameFilters: [ "*.mp3", "*.mp4", "*.webm" ]
             selectMultiple: true
             onSelectionAccepted: {
 //                console.log(fileUrls)

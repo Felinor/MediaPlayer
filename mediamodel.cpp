@@ -27,9 +27,6 @@ using namespace std;
 
 MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
 {
-//    connect(m_player, QOverload<>::of(&QMediaPlayer::metaDataChanged),
-//            this, &MediaModel::metaDataChanged);
-
     connect(m_player, &QMediaPlayer::mediaStatusChanged,
             this, &MediaModel::metaDataChanged);
 
@@ -54,9 +51,10 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
     connect(m_radioPlayer, QOverload<QMediaPlayer::Error>::of(&QMediaPlayer::error),
         [=](QMediaPlayer::Error error){ qDebug() << error << "<-- Ошибка"; });
 
-    connect(m_manager, &QNetworkAccessManager::finished, this, &MediaModel::load);
+    connect(m_manager, &QNetworkAccessManager::finished, this, &MediaModel::networkReplyIsFinished);
 
-//    connect(m_radioPlaylist, &QMediaPlaylist::loaded, this, &MediaModel::load);
+    //    connect(m_player, QOverload<>::of(&QMediaPlayer::metaDataChanged),
+    //            this, &MediaModel::metaDataChanged);
 
 //    TagLib::FileRef f("");
 //    f.tag()->setArtist("");
@@ -225,26 +223,11 @@ void MediaModel::applyVolume(int volumeSliderValue)
 }
 
 void MediaModel::playRadio(QString url)
-{    
-    QMimeDatabase db;
-    QMimeType mime = db.mimeTypeForFile(url, QMimeDatabase::MatchContent);
-//    qDebug() << mime.name() << "Name of the MIME type"; // Name of the MIME type ("audio/mpeg").
-//    qDebug() << mime.suffixes() << "Known suffixes for this MIME type"; // Known suffixes for this MIME type ("mp3", "mpga").
-//    qDebug() << mime.preferredSuffix() << "Preferred suffix for this MIME type"; // Preferred suffix for this MIME type ("mp3").
-
-    QFileInfo fi(url);
-    QString ext = fi.suffix();  // ext = "gz"
-    qDebug() << ext << " QFileInfo.suffix()";
-
-    if (!QUrl(url).isLocalFile() && (QFileInfo(url).suffix() == "m3u" || QFileInfo(url).suffix() == "m38u")) {
-        m_manager->get(QNetworkRequest(QUrl(url)));
-        return;
+{
+    QUrl pathToStream = QUrl(url);
+    if (!pathToStream.isLocalFile()) {
+        m_manager->get(QNetworkRequest(pathToStream));
     }
-
-//    qDebug() << url;
-    m_radioPlayer->setMedia(QMediaContent(url));
-    m_radioPlayer->setVolume(100);
-    m_radioPlayer->play();
 }
 
 void MediaModel::savePlaylist(const QVariant &path)
@@ -261,16 +244,25 @@ void MediaModel::loadPlaylist(const QVariant &pathToPlaylist)
         clear();
     }
 
-    QFile inputFile(QUrl(pathToPlaylist.toString()).path());
-    if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        QTextStream input(&inputFile);
-        input.setCodec("UTF-8");
-        while (!input.atEnd()) {
-            QString pathToMediaFile = input.readLine().toUtf8();
-            add(metaDataContainer(QUrl(pathToMediaFile).path().toStdString().c_str()));
-            m_playlist->addMedia(QUrl(QFileInfo(pathToMediaFile).filePath()));
+    if (QFileInfo(pathToPlaylist.toString()).suffix() == "m3u" || "m3u8" || "pls") {
+        QFile inputFile(QUrl(pathToPlaylist.toString()).path());
+        if (inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            QTextStream input(&inputFile);
+            input.setCodec("UTF-8");
+            while (!input.atEnd()) {
+                QString line = input.readLine().toUtf8();
+                QUrl pathToLocalMediaFile = QUrl(line);
+                // comments check
+                if (!(line.front() == QString("#")) && pathToLocalMediaFile.isValid() && pathToLocalMediaFile.isLocalFile()) {
+                    add(metaDataContainer(pathToLocalMediaFile.path().toStdString().c_str()));
+                    m_playlist->addMedia(pathToLocalMediaFile);
+                }
+                else {
+                    emit pathIsInvalid();
+                }
+            }
+            inputFile.close();
         }
-        inputFile.close();
     }
     m_playlist->setCurrentIndex(0);
     m_player->setPlaylist(m_playlist);
@@ -288,33 +280,22 @@ void MediaModel::removeRow(int index) {
     endResetModel();
 }
 
-void MediaModel::load(QNetworkReply *reply)
+void MediaModel::networkReplyIsFinished(QNetworkReply *reply)
 {
     QByteArray answer = reply->readAll();
-    reply->deleteLater();
 
     QTextStream input(&answer);
     input.setCodec("UTF-8");
-
-    while (!input.atEnd())
-    {
-        QString urlPath = input.readLine().toUtf8();
-        // Validity check
-        QRegExp regexpr("^(((http|ftp)(s?)\:\/\/)|(www\.))(([a-zA-Z0-9\-\.]+(\.[a-zA-Z0-9\-\.]+)+)|localhost)(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_])?([\d\w\.\/\%\+\-\=\&\?\:\\\"\'\,\|\~\;])$");
-
-        if (!(urlPath.front() == QString("#"))) {
-            regexpr.indexIn(urlPath);
-            if (regexpr.cap(0).length() != 0 && QUrl(urlPath).isValid()) {
-                //url passed validation test
-                m_radioPlaylist->addMedia(QUrl(urlPath));
-                qDebug() << "URL is valid:" << urlPath;
-            }
-        }
-        else {
-            qDebug() << "Invalid URL:" << urlPath;
+    QRegExp urlValidationRule("^(((http|ftp)(s?)\:\/\/)|(www\.))(([a-zA-Z0-9\-\.]+(\.[a-zA-Z0-9\-\.]+)+)|localhost)(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_])?([\d\w\.\/\%\+\-\=\&\?\:\\\"\'\,\|\~\;])$");
+    while (!input.atEnd()) {
+        QString line = input.readLine().toUtf8();
+        QUrl urlPath = QUrl(line);
+        qDebug() << urlPath << "<-- urlPath";
+        // comments check
+        if (!(line.front() == QString("#")) && urlValidationRule.cap(0).length() != 0 && urlPath.isValid()) {
+            m_radioPlaylist->addMedia(urlPath);
         }
     }
-
     m_radioPlayer->setPlaylist(m_radioPlaylist);
     m_radioPlayer->setVolume(100);
     m_radioPlayer->play();

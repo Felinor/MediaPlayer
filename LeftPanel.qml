@@ -52,8 +52,20 @@ Column {
         FileDialog {
             id: loadDialog
             folder: shortcuts.music
+            nameFilters: [ "*.m3u", "*.m3u8", "*.pls" ]
             onAccepted: dataModel.loadPlaylist(fileUrl)
+        }
+        Connections {
+            target: dataModel
 
+            function onPathIsInvalid() {
+                invalidPathDialog.open()
+            }
+        }
+        MessageDialog {
+            id: invalidPathDialog
+            title: "Path is invalid"
+            text: "Please check the path(s) in the playlist. \n (ｏ・_・)ノ”(ノ_<、)"
         }
     }
     RoundButton {

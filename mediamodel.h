@@ -70,7 +70,7 @@ public:
 
 public slots:
     void metaDataChanged(QMediaPlayer::MediaStatus status);
-    void load(QNetworkReply *reply);
+    void networkReplyIsFinished(QNetworkReply *reply);
 
 signals:
     void durationChanged();
@@ -79,6 +79,7 @@ signals:
     void mediaPlayerStateChanged();
 
     void volumeChanged();
+    void pathIsInvalid();
 
 private:
     QVariantMap getMetaData(TagLib::FileRef &reference);

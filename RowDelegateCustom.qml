@@ -77,9 +77,26 @@ ItemDelegate {
         }
         Menu {
             id: hideMenu
+            width: 100
+            height: 50
+
             MenuItem {
+                id: menuItem
                 text: "Удалить"
+                implicitHeight: 30
+                implicitWidth: 100
                 onTriggered: dataModel.removeRow(styleData.row)
+                background: Rectangle {
+                     width: menuItem.width
+                     height: menuItem.height
+                     radius: 5
+                }
+                contentItem: Text {
+                    text: menuItem.text
+                    color: "black"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                }
             }
         }
     }
