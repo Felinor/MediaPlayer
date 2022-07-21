@@ -80,6 +80,7 @@ signals:
 
     void volumeChanged();
     void pathIsInvalid();
+    void formatNotSupported(QString message);
 
 private:
     QVariantMap getMetaData(TagLib::FileRef &reference);
@@ -100,7 +101,7 @@ private:
     QMediaPlayer::State m_mediaPlayerState;
     int m_volume = 100;
 
-    QNetworkAccessManager *m_manager = new QNetworkAccessManager;
+    QNetworkAccessManager *m_manager = new QNetworkAccessManager(this);
 };
 
 #endif // MEDIAMODEL_H

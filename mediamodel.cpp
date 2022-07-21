@@ -10,6 +10,7 @@
 #include <QNetworkReply>
 #include <QJsonDocument>
 #include <QMessageBox>
+#include <QAudioDeviceInfo>
 
 #include <iostream>
 #include <iomanip>
@@ -224,9 +225,17 @@ void MediaModel::applyVolume(int volumeSliderValue)
 
 void MediaModel::playRadio(QString url)
 {
+    m_radioPlaylist->clear();
+
     QUrl pathToStream = QUrl(url);
-    if (!pathToStream.isLocalFile()) {
+    // check if url is a playlist
+    if (!pathToStream.isLocalFile() && url.contains("m3u")) {
         m_manager->get(QNetworkRequest(pathToStream));
+    }
+    else {
+        m_radioPlayer->setMedia(pathToStream);
+        m_radioPlayer->setVolume(100);
+        m_radioPlayer->play();
     }
 }
 
@@ -282,17 +291,18 @@ void MediaModel::removeRow(int index) {
 
 void MediaModel::networkReplyIsFinished(QNetworkReply *reply)
 {
+    m_radioPlaylist->clear();
+
     QByteArray answer = reply->readAll();
+    reply->deleteLater();
 
     QTextStream input(&answer);
     input.setCodec("UTF-8");
-    QRegExp urlValidationRule("^(((http|ftp)(s?)\:\/\/)|(www\.))(([a-zA-Z0-9\-\.]+(\.[a-zA-Z0-9\-\.]+)+)|localhost)(\/?)([a-zA-Z0-9\-\.\?\,\'\/\\\+&%\$#_])?([\d\w\.\/\%\+\-\=\&\?\:\\\"\'\,\|\~\;])$");
     while (!input.atEnd()) {
         QString line = input.readLine().toUtf8();
         QUrl urlPath = QUrl(line);
-        qDebug() << urlPath << "<-- urlPath";
-        // comments check
-        if (!(line.front() == QString("#")) && urlValidationRule.cap(0).length() != 0 && urlPath.isValid()) {
+        // comments check; .ts is problematic format
+        if (!(line.front() == QString("#")) && urlPath.isValid() && QFileInfo(line).suffix() != "ts") {
             m_radioPlaylist->addMedia(urlPath);
         }
     }

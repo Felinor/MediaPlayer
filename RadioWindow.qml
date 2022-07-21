@@ -94,11 +94,14 @@ Rectangle {
             icon: "https://www.radioparadise.com/favicon.ico"
             source: "http://stream-uk1.radioparadise.com/aac-320"
         }
-//        ListElement {
-//            name: "101-smoothjazz.m3u"
-//            icon: ""
-//            source: "/home/felinor/Музыка/101-smoothjazz.m3u"
-//        }
+    }
+
+    Connections {
+        target: dataModel
+
+        function onFormatNotSupported(message) {
+            console.log(message, "QML")
+        }
     }
 
     GridView {
