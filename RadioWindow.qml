@@ -19,7 +19,8 @@ Rectangle {
     XmlListModel {
         id: xmlModel
 
-        source: "https://nl1.api.radio-browser.info/xml/stations/search?offset=10&limit=10&countrycode=US&hidebroken=true&order=clickcount&reverse=true"
+//        source: "https://nl1.api.radio-browser.info/xml/stations/search?offset=10&limit=10&countrycode=US&hidebroken=true&order=clickcount&reverse=true"
+        source: "radiolist.xml"
         query: "/result/station"
 
         XmlRole {

@@ -25,6 +25,7 @@ RESOURCES += \
     LeftPanel.qml \    
     RadioWindow.qml \
     radio.png \
+    radiolist.xml \
     RowDelegateCustom.qml \    
     SongLabel.qml \
     TableViewQQ1.qml \
