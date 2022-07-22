@@ -24,7 +24,8 @@ RESOURCES += \
     ItemDelegateCustom.qml \
     LeftPanel.qml \    
     RadioWindow.qml \
-    RowDelegateCustom.qml \
+    radio.png \
+    RowDelegateCustom.qml \    
     SongLabel.qml \
     TableViewQQ1.qml \
     album-cover.jpg \

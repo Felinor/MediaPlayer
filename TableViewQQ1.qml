@@ -8,7 +8,7 @@ TableView {
     alternatingRowColors: false
     backgroundVisible: false
 //    verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-//    horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+//    horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff    
 
     TableViewColumn {
         id: column_0
@@ -50,6 +50,8 @@ TableView {
         headerDelegate: HeaderDelegateCustom {}
         itemDelegate: ItemDelegateCustom {}
         rowDelegate: RowDelegateCustom {}
+
+        alternateBackgroundColor: "transparent"
 
 //        handle: Rectangle {
 //            implicitWidth: 14

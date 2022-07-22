@@ -8,7 +8,7 @@ import "helper.js" as Helper
 
 ApplicationWindow {
     id: root
-    width: 810
+    width: 860
     height: 600
     visible: true
     minimumHeight: 600
@@ -16,7 +16,7 @@ ApplicationWindow {
     title: qsTr("Hello World")
 
     onWidthChanged: console.log(width)
-    flags: Qt.FramelessWindowHint
+//    flags: Qt.FramelessWindowHint
 //    color: "transparent"
 //    Rectangle {
 //        x: 10
@@ -82,7 +82,8 @@ ApplicationWindow {
         anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
         radius: 20
-        color: "#f4f4fe"
+//        color: "#f4f4fe"
+        color: "transparent"
         border {
             color: "red"
             width: 3
@@ -104,6 +105,7 @@ ApplicationWindow {
                 id: tableView
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+//                height: parent.height
                 model: dataModel
                 visible: !loader.active                
             }

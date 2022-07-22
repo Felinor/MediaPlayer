@@ -55,6 +55,12 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
 
     connect(m_manager, &QNetworkAccessManager::finished, this, &MediaModel::networkReplyIsFinished);
 
+    connect(m_radioPlayer, &QMediaPlayer::positionChanged,
+            this, [&](qint64 dur) { qDebug() << "position changed = " << dur; });
+
+    connect(m_radioPlayer, &QMediaPlayer::positionChanged,
+            this, &MediaModel::setPosition);
+
 //    TagLib::FileRef f("");
 //    f.tag()->setArtist("");
 //    f.tag()->setTitle("");

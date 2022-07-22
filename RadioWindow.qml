@@ -1,16 +1,25 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.XmlListModel 2.15
+import QtGraphicalEffects 1.15
+import QtWebView 1.15
 
 Rectangle {
     border.width: 3
     border.color: "yellow"
     color: "steelblue"
+    clip: true
+
+//    WebView {
+//        id: webView
+//        url: "https://www.radio-browser.info/search?page=1&hidebroken=true&order=votes&reverse=true"
+//        anchors.fill: parent
+//    }
 
     XmlListModel {
         id: xmlModel
 
-        source: "https://nl1.api.radio-browser.info/xml/stations/search?limit=10&countrycode=US&hidebroken=true&order=clickcount&reverse=true"
+        source: "https://nl1.api.radio-browser.info/xml/stations/search?offset=10&limit=10&countrycode=US&hidebroken=true&order=clickcount&reverse=true"
         query: "/result/station"
 
         XmlRole {
@@ -24,6 +33,10 @@ Rectangle {
         XmlRole {
             name: "icon"
             query: "@favicon/string()"
+        }
+        XmlRole {
+            name: "votes"
+            query: "@votes/string()"
         }
     }
 
@@ -98,10 +111,15 @@ Rectangle {
 
     GridView {
         id: gridView
+        property string stationName: ""
+//        visible: false
 
-        model: listModel
-//        model: xmlModel
-        anchors.fill: parent
+//        model: listModel
+        model: xmlModel
+//        anchors.fill: parent
+        width: parent.width
+        height: parent.height -100
+        clip: true
         cellWidth: 150
         cellHeight: 150
         topMargin: 10
@@ -111,52 +129,94 @@ Rectangle {
             height: gridView.cellHeight
 
             Column {
-                spacing: 5                
+                spacing: 5
 
-                Image {
-                    id: image
-
-                    source: icon;
+                Rectangle {
+                    id: overlap
+                    visible: false
                     anchors.horizontalCenter: parent.horizontalCenter
                     width: gridView.cellWidth - 25
-                    height: gridView.cellHeight - 25                    
+                    height: gridView.cellHeight - 25
+                    color: "white"
+                    radius: 15
 
-                    property bool rounded: true
-                    property bool adapt: true
+                    Image {
+                        id: image1
 
-                    layer.enabled: rounded
-                    layer.effect: ShaderEffect {
-                        property real adjustX: image.adapt ? Math.max(width / height, 1) : 1
-                        property real adjustY: image.adapt ? Math.max(1 / (width / height), 1) : 1
+                        source: "https://cdn-icons-png.flaticon.com/128/3308/3308709.png"
+                        anchors.centerIn: parent
+                        width: 50
+                        height: 50
+                    }
 
-                        fragmentShader: "
-                            #ifdef GL_ES
-                                precision lowp float;
-                            #endif // GL_ES
-                            varying highp vec2 qt_TexCoord0;
-                            uniform highp float qt_Opacity;
-                            uniform lowp sampler2D source;
-                            uniform lowp float adjustX;
-                            uniform lowp float adjustY;
-
-                            void main(void) {
-                                lowp float x, y;
-                                x = (qt_TexCoord0.x - 0.5) * adjustX;
-                                y = (qt_TexCoord0.y - 0.5) * adjustY;
-                                float delta = adjustX != 1.0 ? fwidth(y) / 2.0 : fwidth(x) / 2.0;
-                                gl_FragColor = texture2D(source, qt_TexCoord0).rgba
-                                    * step(x * x + y * y, 0.25)
-                                    * smoothstep((x * x + y * y) , 0.25 + delta, 0.25)
-                                    * qt_Opacity;
-                            }"
+                    Label {
+                        anchors.bottom: parent.bottom
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        text: "Votes: " + votes
                     }
 
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: cursorShape = Qt.PointingHandCursor
-                        onExited: cursorShape = Qt.ArrowCursor
-                        onClicked: dataModel.playRadio(source)
+                        onEntered: {
+                            cursorShape = Qt.PointingHandCursor
+                        }
+                        onExited: {
+                            cursorShape = Qt.ArrowCursor
+                            overlap.visible = !overlap.visible
+                            image.visible = !image.visible
+                        }
+                        onClicked: {
+                            dataModel.playRadio(source)
+                            gridView.stationName = name
+                        }
+                    }
+                }
+
+                Image {
+                    id: image
+
+                    source: icon === "" ? "radio.png" : icon
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: gridView.cellWidth - 25
+                    height: gridView.cellHeight - 25
+                    Component.onCompleted: {
+                        console.log(image.source, "<-- Icon source")
+                    }
+
+                    property bool rounded: true
+                    property bool adapt: true
+
+                    layer.enabled: rounded
+                    layer.effect: OpacityMask {
+                        maskSource: Item {
+                            width: image.width
+                            height: image.height
+                            Rectangle {
+                                anchors.centerIn: parent
+                                width: image.adapt ? image.width : Math.min(image.width, image.height)
+                                height: image.adapt ? image.height : width
+                                radius: 15
+                            }
+                        }
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: {
+                            cursorShape = Qt.PointingHandCursor
+                            overlap.visible = !overlap.visible
+                            image.visible = !image.visible
+                        }
+                        onExited: {
+                            cursorShape = Qt.ArrowCursor
+//                            overlap.visible = !overlap.visible
+//                            image.visible = !image.visible
+                        }
+                        onClicked: {
+                            dataModel.playRadio(source)
+                            gridView.stationName = name
+                        }
                     }
                 }
 
@@ -172,6 +232,7 @@ Rectangle {
                         id: radioStationName
                         horizontalAlignment: Qt.AlignHCenter
                         text: name
+                        color: "white"
 
                         NumberAnimation on x {
                             from: container.width
@@ -184,5 +245,14 @@ Rectangle {
                 }
             }
         }
+    }
+
+    Label {
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.topMargin: 50
+        anchors.top: gridView.bottom
+        text: gridView.stationName + '\n' + "Position: "
+              + (dataModel.position / 1000).toFixed(0)
+        color: "white"
     }
 }
