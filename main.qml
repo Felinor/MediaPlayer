@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Dialogs 1.3
 import MediaModel 1.0
+import QtQuick.Window 2.15
 import "helper.js" as Helper
 
 ApplicationWindow {
@@ -15,7 +16,7 @@ ApplicationWindow {
     title: qsTr("Hello World")
 
     onWidthChanged: console.log(width)
-//    flags: Qt.FramelessWindowHint
+    flags: Qt.FramelessWindowHint
 //    color: "transparent"
 //    Rectangle {
 //        x: 10
@@ -24,30 +25,24 @@ ApplicationWindow {
 //        height: parent.height-20
 //        radius: 15
 //    }
-
-//    Rectangle {
-//        color: "#3C096C"
-//        opacity: 0.8
-//        radius: 20
-//        anchors.fill: parent
-//    }
     background: Rectangle {
 //        width: parent.width-20
 //        height: parent.height-20
 //        radius: 15
+
         gradient: Gradient {
-            GradientStop { position: 0; color: "#ffffff" }
-            GradientStop { position: 1; color: "#c1bbf9" }
+            GradientStop { position: 0; color: "#70dfe8" }
+            GradientStop { position: 1; color: "#1e62a0" }
         }
     }
 
-    overlay.modal: Rectangle {
-        color: "#8f28282a"
-    }
+//    overlay.modal: Rectangle {
+//        color: "#8f28282a"
+//    }
 
-    overlay.modeless: Rectangle {
-        color: "#2f28282a"
-    }
+//    overlay.modeless: Rectangle {
+//        color: "#2f28282a"
+//    }
 
 //    Left debug rect
 //    Rectangle {
@@ -65,7 +60,7 @@ ApplicationWindow {
     */
     LeftPanel {
         id: leftPanel
-        width: 50
+        width: 100
         height: parent.height
         anchors.left: parent.left
         topPadding: 20
@@ -75,14 +70,18 @@ ApplicationWindow {
     MediaModel {
         id: dataModel
     }
+
+ menuBar: AppWindowButtons { }
+
     /*!
         \brief Debug draw rect
-    */
+    */        
     Rectangle {
-        height: parent.height
+        height: parent.height - 50
         width: parent.width - leftPanel.width
+        anchors.verticalCenter: parent.verticalCenter
         anchors.right: parent.right
-//        color: "skyblue"
+        radius: 20
         color: "#f4f4fe"
         border {
             color: "red"
@@ -115,48 +114,6 @@ ApplicationWindow {
                 Layout.fillHeight: true
                 active: false
             }
-
-//            Connections {
-//                target: dataModel
-
-//                function onPlayerStateChanged(state) {
-//                    if (state === 1)
-//                        songNameLabel.text = "1515151511"
-//                    else
-//                        songNameLabel.text = ""
-//                }
-//            }
-
-//            Image {
-//                fillMode: Image.PreserveAspectCrop
-//                width: 50
-//                height: 50
-//                source: "album-cover.jpg"
-//                source: model.coverImage
-//            }
-
-
-//                Connections {
-//                    target: dataModel
-
-//                    function onDurationReady() {
-//                        seekSlider.to = dataModel.duration()
-//                        console.log("Connect Duration = ", dataModel.duration())
-//                    }
-
-//                    function onPositionReady() {
-//                        seekSlider.value = dataModel.position()
-//                        console.log("Connect Position = ", dataModel.position())
-//                    }
-//                }
-
-//            Timer {
-//                running: false
-//                interval: 1000
-//                repeat: true
-//                onTriggered: console.log("Position =",dataModel.position())
-//                onTriggered: console.log("Position =",dataModel.positionReady())
-//            }
 
             /*!
                 \brief Debug draw rect

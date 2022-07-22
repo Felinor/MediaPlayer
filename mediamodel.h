@@ -41,7 +41,7 @@ public:
     Q_INVOKABLE void previous();
     Q_INVOKABLE void random();
     Q_INVOKABLE void loopCurrentItem();
-    Q_INVOKABLE void createPlaylist(QVariant playlist);
+    Q_INVOKABLE void createPlaylist(QVariant path);
     Q_INVOKABLE void setMediaPosition(int position);
     Q_INVOKABLE void setCurrentMedia(const int index);
     Q_INVOKABLE void applyVolume(int volumeSliderValue);
@@ -80,7 +80,6 @@ signals:
 
     void volumeChanged();
     void pathIsInvalid();
-    void formatNotSupported(QString message);
 
 private:
     QVariantMap getMetaData(TagLib::FileRef &reference);

@@ -11,6 +11,7 @@
 #include <QJsonDocument>
 #include <QMessageBox>
 #include <QAudioDeviceInfo>
+#include <QMediaMetaData>
 
 #include <iostream>
 #include <iomanip>
@@ -53,9 +54,6 @@ MediaModel::MediaModel(QObject *parent) : QAbstractListModel(parent)
         [=](QMediaPlayer::Error error){ qDebug() << error << "<-- Ошибка"; });
 
     connect(m_manager, &QNetworkAccessManager::finished, this, &MediaModel::networkReplyIsFinished);
-
-    //    connect(m_player, QOverload<>::of(&QMediaPlayer::metaDataChanged),
-    //            this, &MediaModel::metaDataChanged);
 
 //    TagLib::FileRef f("");
 //    f.tag()->setArtist("");
@@ -126,13 +124,7 @@ void MediaModel::add(QVariantMap data)
 }
 
 void MediaModel::play()
-{
-    qDebug() << m_player->mediaStatus() << "Media status";
-
-//    if (m_player->mediaStatus() == QMediaPlayer::NoMedia) {
-//        qDebug() << "Give me somethink";
-//        return;
-//    }    
+{   
     m_player->play();
 
     qDebug() <<  m_playlist->currentMedia().request().url() << "<-- Current Media";
@@ -171,28 +163,14 @@ void MediaModel::loopCurrentItem()
     m_playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
 }
 
-void MediaModel::createPlaylist(QVariant playlist)
+void MediaModel::createPlaylist(QVariant path)
 {
-//    m_playlist->clear();
-    QList<QUrl> list = qvariant_cast<QList<QUrl>>(playlist);
+    QList<QUrl> playlist = qvariant_cast<QList<QUrl>>(path);
 
-    foreach (const QUrl filename, list) {
+    foreach (const QUrl filename, playlist) {
         m_playlist->addMedia(filename);
-
-//        QString mediaName = QFileInfo(filename.path()).fileName(); //baseName()
-
-        TagLib::FileRef f(filename.path().toStdString().c_str());
-        getMetaData(f);
-
-        QVariantMap map;
-        map.insert("artist", getMetaData(f).value("artist"));
-        map.insert("title", getMetaData(f).value("title"));
-        map.insert("time", getMetaData(f).value("length"));
-        map.insert("album", getMetaData(f).value("album"));
-        add(map);
-    }   
-
-//    testMediaInfoLib();
+        add(metaDataContainer(filename.path().toStdString().c_str()));
+    }
     m_playlist->setPlaybackMode(QMediaPlaylist::Loop);
     m_player->setPlaylist(m_playlist);
 }
@@ -374,6 +352,11 @@ void MediaModel::metaDataChanged(QMediaPlayer::MediaStatus status)
 //        map.insert("title", m_player->metaData(QMediaMetaData::Title).toString());
 //        map.insert("coverImage", imageUrl);
 //        add(map);
+
+//        if (m_radioPlayer->isMetaDataAvailable()) {
+//                qDebug() << m_radioPlayer->metaData(QMediaMetaData::AlbumArtist).toString();
+//                qDebug() << m_radioPlayer->metaData(QMediaMetaData::Title).toString();
+//        }
     }
 }
 

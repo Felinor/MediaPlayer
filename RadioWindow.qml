@@ -96,14 +96,6 @@ Rectangle {
         }
     }
 
-    Connections {
-        target: dataModel
-
-        function onFormatNotSupported(message) {
-            console.log(message, "QML")
-        }
-    }
-
     GridView {
         id: gridView
 

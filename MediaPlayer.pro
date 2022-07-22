@@ -14,8 +14,10 @@ SOURCES += \
         mediamodel.cpp
 
 RESOURCES += \
+    AppWindowButtons.qml \
     radioIcons.qrc \
     ControlPanel.qml \
+    CustomButton.qml \
     CustomSlider.qml \
     HeaderDelegateCustom.qml \
     helper.js \

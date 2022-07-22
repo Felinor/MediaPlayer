@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QSplashScreen>
 
 #include <QLocale>
 #include <QTranslator>
@@ -17,10 +18,14 @@ int main(int argc, char *argv[])
     QGuiApplication::setOrganizationName("Media Player");
     QGuiApplication::setOrganizationDomain("Media Player");
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);       
 
     QGuiApplication app(argc, argv);
     app.setWindowIcon(QIcon("appLogo.ico"));
+
+//    QPixmap pixmap("album-cover.jpg");
+//    QSplashScreen splash(pixmap);
+//    splash.show();
 
     qmlRegisterType<MediaModel>("MediaModel", 1, 0, "MediaModel");
 
@@ -43,7 +48,7 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
-    engine.load(url);
+    engine.load(url);    
 
     return app.exec();
 }

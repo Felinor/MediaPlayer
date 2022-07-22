@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 import QtQuick.Dialogs 1.3
+import QtQuick.Window 2.15
 
 Column {
     spacing: 30
@@ -99,5 +100,29 @@ Column {
             loader.source = "RadioWindow.qml"
             console.log("will open radio")
         }
+    }
+    CustomButton {
+        Layout.alignment: Qt.AlignHCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: loader.active ? "Music" : "Radio"
+//        onClicked: {
+//            loader.active = !loader.active
+//            loader.source = "RadioWindow.qml"
+//            console.log("will open radio")
+//        }
+        onClicked: root.visibility = Window.FullScreen
+    }
+    CustomButton {
+        Layout.alignment: Qt.AlignHCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: "Load"
+//        onClicked: Qt.quit()
+        onClicked: root.visibility = Window.Minimized
+    }
+    CustomButton {
+        Layout.alignment: Qt.AlignHCenter
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: "Save"
+        onClicked: root.visibility = Window.Windowed
     }
 }
